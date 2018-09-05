@@ -1,0 +1,13 @@
+Package: diet
+Version: 0.91
+Date: 2017-03-11
+Title: Performs an analysis of diet data using univariate trees
+Author: Petra Kuhnert, with contributions from Leanne Duffy
+Maintainer: Petra Kuhnert <Petra.Kuhnert@data61.csiro.au>
+Depends: R (>= 3.3.2), rpart, maps
+Imports: SOAR, abind, grid, geoR, mgcv, grDevices, lattice, foreach, utils,
+    graphics, stats, methods, ggplot2, gridExtra, GGally, reshape, raster,
+    rasterVis, ggmap, maps, mapdata, latticeExtra, maptools, spaMM
+Description: Performs an analysis of diet and isotope data using univariate trees.
+License: GPL (>= 2)
+LazyLoad: yes

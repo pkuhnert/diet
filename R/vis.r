@@ -1,0 +1,2 @@
+vis <- function(x, view = NULL, cond = list(), n.grid = 30, too.far = 0, col = NA, color = "heat", contour.col = NULL, se = -1, type = "link", 
+                plot.type = "persp", zlim = NULL, nCol = 50, se.plot = TRUE, ...) UseMethod("vis")

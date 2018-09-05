@@ -1,0 +1,1 @@
+resids <- function(object, LonID, LatID, predID, plot = TRUE) UseMethod("resids")

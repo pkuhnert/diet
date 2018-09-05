@@ -1,0 +1,71 @@
+
+
+export(bagging, dpart, diversity, grab, grabmulti, importance, link, mappoints, partdep, apc)
+export(read.dm, read.pp, writepn.csv)
+export(igam, diagnostic, vis, resids)
+export(print.dpart, print.grab, predict.dpart, prune.dpart, plot.dpart, plot.diet)
+
+import(rpart)
+import(SOAR)
+import(abind)
+import(grid)
+import(maps)
+import(geoR)
+import(mgcv)
+import(grDevices)
+import(lattice)
+import(foreach)
+importFrom(utils, read.csv, flush.console, write.csv)
+import(graphics)
+import(stats)
+importFrom(methods, Quote)
+import(ggplot2)
+import(gridExtra)
+import(GGally)
+import(reshape)
+import(raster)
+import(rasterVis)
+import(ggmap)
+import(mapdata)
+import(latticeExtra)
+import(maptools)
+import(mgcv)
+import(spaMM)
+
+
+S3method(mappoints, data)
+
+S3method(diagnostic, igam)
+S3method(plot, igam)
+S3method(vis, igam)
+
+S3method(diversity, dpart)
+S3method(grab, dpart)
+S3method(grabmulti, dpart)
+S3method(importance, dpart)
+S3method(plot, dpart)
+S3method(predict, dpart)
+S3method(print, dpart)
+S3method(prune, dpart)
+S3method(resids, dpart)
+S3method(rsq, dpart)
+S3method(select.tree, dpart)
+S3method(summary, dpart)
+S3method(text, dpart)
+S3method(tree.depth, dpart)
+
+S3method(apc, diet)
+
+S3method(explore, bag)
+S3method(grab, bag)
+S3method(link, bag)
+S3method(partdep, bag)
+S3method(resids, bag)
+
+S3method(print, grab)
+
+S3method(plot, link)
+
+S3method(plot, diet)
+
+

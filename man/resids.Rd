@@ -1,0 +1,97 @@
+\name{resids.dpart}
+\alias{resids.dpart}
+\alias{resids.bag}
+\alias{resids}
+
+
+
+%- Also NEED an '\alias' for EACH other topic documented here.
+\title{
+Residual Analysis 
+}
+
+\description{
+Examines the residuals from the fit of the model to determine whether spatial
+dependence exists. Operates on objects of class \code{dpart}.
+}
+\usage{
+\method{resids}{dpart}(object, LonID, LatID, predID, plot = TRUE)
+\method{resids}{bag}(object, LonID, LatID, predID, plot = TRUE)
+
+
+
+}
+%- maybe also 'usage' for other objects documented here.
+\arguments{
+  \item{object}{
+object of class \code{dpart}.
+}
+  \item{LonID}{
+column name for longitude.
+}
+  \item{LatID}{
+column name for latitude.
+}
+
+ \item{predID}{
+predator ID
+}
+  \item{plot}{
+logical. Whether plotting should be performed
+}
+
+
+ 
+}
+\details{
+Produces a variogram of the residuals to check for spatial dependence.
+}
+\value{
+Outputs the residuals and a variogram plot of the residuals for checking.
+}
+\author{
+Petra Kuhnert and Leanne Duffy
+}
+
+\seealso{
+objects to See Also as \code{\link{variog}}
+}
+\examples{
+# Load data
+data(yftdiet)  
+# Load the prey taxa data
+data(PreyTaxonSort)
+
+# Assigning prey colours for default palette
+val <- apc(x = yftdiet, preyfile = PreyTaxonSort, check = TRUE)
+node.colsY <- val$cols
+dietPP <- val$x   # updated diet matrix with Group assigned prey taxa codes
+
+# Fitting the classification tree
+yft.dp <- dpart(Group ~ Lat + Lon + Year + Quarter + SST  + Length, 
+                   data = dietPP, weights = W, minsplit = 10,
+                   cp = 0.001)
+                   
+# Pruning the tree
+yft.pr <- prune(yft.dp, se = 1)                   
+
+# Checking residuals
+#yft.resid <- resids(yft.pr, LonID = "Lon", LatID = "Lat", 
+#    predID = "TripSetPredNo", plot = TRUE) # need to compute resids from bootstrapping
+
+
+# Bagging
+# Bagging with NO spatial bootstrapping
+#yft.bag <- bagging(Group ~ Lat + Lon + Year + Quarter + SST  + Length,
+#                    data = dietPP, weights = W, minsplit = 50,
+#                    cp = 0.001, nBaggs = 500, predID = "TripSetPredNo")
+
+# Checking for spatial dependence
+#yft.bag.resid <- resids(yft.bag, LonID = "Lon", LatID = "Lat", 
+#  predID = "TripSetPredNo", plot = TRUE) # need to compute resids from bootstrapping
+
+}
+% Add one or more standard keywords, see file 'KEYWORDS' in the
+% R documentation directory.
+\keyword{ ~kwd1 }
+\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line
