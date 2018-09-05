@@ -1,3 +1,90 @@
+#' Exploratory Plots of the Diet Data
+#' 
+#' @description Produces a number of exploratory plots of the diet data
+#' 
+#' @param x object of class \code{diet}. The result of reading in the data using either the
+#' \code{\link{read.dm}} and \code{link{read.pp}} functions.
+#' @param Xvar vector listing the names of x-variables to explore.
+#' @param LonID column name listing the longitude.
+#' @param LatID column name listing the latitude
+#' @param mapxlim optional map x-axis ranges in the form of c(lower, upper).
+#' @param mapylim optional map y-axis ranges in the form of c(lower, upper).
+#' @param PredSpID optional column name listing the predator species label
+#' @param SmXvar optional vector listing the column names of variables to be 
+#' explored on a smooth surface. Latitude and Longitude column names need to 
+#' be specified for GAMs to be fitted. Note, choice of variables for smoothing 
+#' needs some careful thought and exploration as the GAM fit to each variable 
+#' assumes Gaussian errors.
+#' @param leg.loc legend location for some plots where legends are required. 
+#' Defaults to "top left"
+#' @param col colour for map outline (default: black)
+#' @param Factor categorical variable used to condition the compositional maps. 
+#' For example, if "Predator" was used, compositional plots of prey would be 
+#' produced for each predator listed in the predator variable.
+#' @param database either 'world' or 'world2' depending on the area being plotted. 
+#' Defaults to 'world'.
+#' @param PredIDno optional column name specifying the predator label. Used in 
+#' determining the number of predators in the database. If this is left NULL then 
+#' the number of predators in the summary table defaults to NA.
+#' @param prey.cols colours for prey. If NULL, default colours are used.
+#' @param filenm Name of pdf file (with .pdf extension) where plots are produced. 
+#' Defaults to exploratory_plots.pdf
+#' @param \dots additional arguments passed to the function.
+#' 
+#' @usage \method{plot}{diet}(x, Xvar, LonID, LatID, mapxlim, mapylim, PredSpID = NULL, SmXvar = NULL,
+#'                       leg.loc = "topleft", col = "black", Factor,
+#'                                             database = 'world', PredIDno = NULL, prey.cols = NULL, 
+#'                                                                   filenm = NULL, ...)
+#'                                                                   
+#' @details This function produces a number of exploratory plots. Here is a summary.
+#' (1) Maps:
+#'     If latitude and longitude column headings are provided, maps of the data are produced.
+#' (2) Distributional summaries of the x-variables (Xvar):
+#' These consist of pairwise plots, histograms, barcharts.
+#' (3) Smooth plots of the x-variables (SmXvar):
+#' These consist of plots of each variable in space (require latitude and longitude
+#' variables) as fitted by a GAM using the \code{mgcv} package. Note, these are
+#' predictions.
+#' (4) Distributional summaries of the prey composition (by predator if predator ID is provided).
+#' (5) Summary statistics of the x-variables provided.
+#' 
+#' @value  A list consisting of:
+#' \item{SmGAMOutput}{GAM fits for each variable specified in SmXvar has been specified.
+#' This is stored as a list.}
+#' \item{dataS1}{Data summary providing the minimum, maximum, mean, median, 1st and 3rd 
+#' quartiles of each variable in \code{x}}
+#' \item{dataS2}{vector specifying the number of observations, number of predators and number
+#' of species in \code{x}}
+#' 
+#' @references   Kuhnert, P.M., Duffy, L. M and Olson, R.J. (2012) The Analysis of Predator Diet 
+#' and Stable Isotope Data, Journal of Statistical Software, In Prep. 
+#' 
+#' @seealso \code{\link{summary}}, \code{\link{gam}}, \code{\link{mgcv}}
+#' 
+#' @keywords  exploratory
+#' 
+#' @examples 
+# Load Data
+data(yftdiet)
+  
+# Load PreyTaxonSort file
+data(PreyTaxonSort)
+  
+# Assigning prey colours for default palette
+val <- apc(x = yftdiet, preyfile = PreyTaxonSort, check = TRUE)
+node.colsY <- val$cols
+dietPP <- val$x   # updated diet matrix with Group assigned prey taxa codes
+  
+explore.diet <- plot(x = dietPP, LonID = "Lon", LatID = "Lat", 
+                       Xvar = c("Quarter", "Year", "SST", "Length", "Lat", "Lon"),  
+                       PredSpID = "PredSpp", mapxlim = c(-125, -75), mapylim = c(0, 30),
+                       SmXvar = c("SST", "Length"), PredIDno = "TripSetPredNo", col = "gold3",
+                       Factor = "PredSpp", prey.cols = node.colsY)
+names(explore.diet)
+explore.diet$dataS2
+  
+
+
 plot.diet <- function(x, Xvar, LonID, LatID, mapxlim, mapylim, PredSpID = NULL, SmXvar = NULL,
                       leg.loc = "topleft", col = "black", Factor,
                       database = 'world', PredIDno = NULL, prey.cols = NULL, 

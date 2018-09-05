@@ -1,3 +1,17 @@
+#' Internal function used by \code{read.pp} and \code{read.dm}
+#' 
+#' @description Internal function that extracts the species information
+#' 
+#' @param dat A compositional data matrix containing covariate 
+#' information and diet composition for each predator
+#' @param diet.ind.start index where diet compositional data starts
+#' @param sp2omit species to omit
+#' @param FullnessL Fullness column name used to identify full stomachs for analysis
+#' @param DateL Date column name
+#' @param Datef date format
+#' @param p Proportion of prey to omit. 
+
+
 readpred <- function(dat, diet.ind.start, sp2omit, FullnessL, DateL, Datef, p){ 
  
 dat <- dat[!apply(dat[, 1:(diet.ind.start - 1)], 1, function(x) all(is.na(x) | x == "")), ]
