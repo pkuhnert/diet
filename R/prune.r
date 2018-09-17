@@ -46,6 +46,7 @@ prune <- function(tree, ...){
 }
 
 #' @rdname prune
+#' @export
 prune.dpart <- function(tree, se, nsplits, ...){
   
   

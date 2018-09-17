@@ -65,14 +65,12 @@
 #' #classification
 #'                           
 #' @export
-
-
-
 predict <- function(object, ...){
       UseMethod("predict")
 }
 
 #' @rdname predict
+#' @export
 predict.dpart <- function(object, newdata = list(), type = c("prob", "class"), 
                           na.action = na.pass, node.cols = NULL,
            plot = TRUE, pred.type = "obs", predatorID = NULL, cex = 1.0, ...){

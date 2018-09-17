@@ -66,6 +66,11 @@
 #' 
 #' @import "ggplot2"
 #' @importFrom  "spaMM" "spaMM.colors"
+#' @importFrom "mgcv" "gam"
+#' @import "raster"
+#' @import "rasterVis"
+#' @import "lattice"
+#' @importFrom "reshape2" "melt"
 #' 
 #' @examples 
 #' # Load Data

@@ -53,7 +53,10 @@
 #' # Checking for spatial dependence
 #' #yft.bag.resid <- resids(yft.bag, LonID = "Lon", LatID = "Lat", 
 #' #predID = "TripSetPredNo", plot = TRUE) # need to compute resids from bootstrapping
+#'           
 #'                     
+#' @import "geoR"
+#'                                         
 #' @export                     
 
 

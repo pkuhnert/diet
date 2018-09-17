@@ -67,6 +67,7 @@ Produces a variogram of the residuals to check for spatial dependence.
 # Checking for spatial dependence
 #yft.bag.resid <- resids(yft.bag, LonID = "Lon", LatID = "Lat", 
 #predID = "TripSetPredNo", plot = TRUE) # need to compute resids from bootstrapping
+          
                     
 }
 \seealso{
