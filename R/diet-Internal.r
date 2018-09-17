@@ -1697,14 +1697,14 @@ SmPlots <- function(x, i, SmXvar, SmXdat, LonID, LatID, projection, palette, too
   
   # country layer
   country.layer <- layer(
-    sp.polygons(worldcountries, fill=data$fill, col = data$col),
+    sp.polygons(worldcountries, fill=fill, col = col),
     data=list(sp.polygons=sp.polygons, worldcountries=worldcountries, 
               fill="darkgray", col = "lightgray") 
   )
   
   # points layer
   points.layer <- layer(
-    panel.points(tmpdat$Longitude, tmpdat$Latitude, pch = 16, col = "black", cex = 0.6),
+    panel.points(Longitude, Latitude, pch = 16, col = "black", cex = 0.6),
     data = tmpdat
   )
   

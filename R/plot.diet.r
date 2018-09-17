@@ -257,7 +257,7 @@ plot.diet <- function(x, y = NULL, Xvar, LonID, LatID, mapxlim, mapylim, PredSpI
       SmXdat <- data.matrix(x[,SmXvar]) 
       palette <- spaMM.colors()
       projection <- "+proj=longlat +datum=WGS84"
-      
+      browser()
       for(i in 1:ncol(SmXdat)){
        val <- SmPlots(x, i, SmXvar, SmXdat, LonID, LatID, projection, palette, too.far = 0.05)
        res[[i]] <- val$res
