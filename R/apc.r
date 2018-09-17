@@ -1,65 +1,74 @@
 #' Assign prey colours
+#'  
+#' @description Assigns prey colours to prey defined in dataset
 #' 
+#' @param x diet object. Must be of class diet.
+#' @param preyfile  prey file name that contains the prey groupings 
+#' and labels required for labelling the tree. The preyfile can be output 
+#' using the \code{writepn.csv} function and then edited accordingly. See 
+#' \code{writepn.csv} for more details.
+#' @param palette a vector of colours. This requires the user to set up a colour 
+#' palette where the number of colours equals the number of prey in \code{x}. See 
+#' \code{colors()} for a listing of colours available. By default this is set to \code{NULL}.
+#' @param check logical. If set to \code{TRUE}, the prey colour palette is plotted.
 #' 
+#' @usage apc(x, preyfile, palette = NULL, check = FALSE)
 #' 
-#'  @param x diet object. Must be of class diet.
-#'  @param preyfile  prey file name that contains the prey groupings 
-#'  and labels required for labelling the tree. The preyfile can be output 
-#'  using the \code{writepn.csv} function and then edited accordingly. See 
-#'  \code{writepn.csv} for more details.
-#'  @param palette a vector of colours. This requires the user to set up a colour 
-#'  palette where the number of colours equals the number of prey in \code{x}. See 
-#'  \code{colors()} for a listing of colours available. By default this is set to \code{NULL}.
-#'  @param check logical. If set to \code{TRUE}, the prey colour palette is plotted.
+#' @details If a colour palette is not provided, then a palette will be automatically 
+#' derived based on the colour palettes available. For customised colour palettes,
+#' users will need to define a \code{palette}. If no palette is supplied and there 
+#' are more than 4 prey groups, the colour palette will default to rainbow.
+#'  
+#' @return A list with the following components:
+#' \itemize{
+#' \item{cols}{a vector of node colours for each prey appearing in the diet matrix.}
+#' \item{x}{the updated diet matrix with prey groupings as specified in the PreyTaxonSort.csv file.}
+#' }
+#' @references   Kuhnert, P.M., Duffy, L. M and Olson, R.J. (2012) The Analysis of Predator Diet 
+#' and Stable Isotope Data, Journal of Statistical Software, In Prep. 
 #' 
-#'  @usage \method{apc}{diet}(x, preyfile, palette = NULL, check = FALSE)
-#' 
-#'  @details If a colour palette is not provided, then a palette will be automatically 
-#'  derived based on the colour palettes available. For customised colour palettes,
-#'  users will need to define a \code{palette}. If no palette is supplied and there 
-#'  are more than 4 prey groups, the colour palette will default to rainbow.
+#' @seealso 
+#' \code{\link{colors}}; \code{\link{palette}}; \code{\link{topo.colors}};
+#' \code{\link{heat.colors}}; \code{\link{terrain.colors}}
 #'  
-#'  @value A list with the following components:
-#'  \item{cols}{a vector of node colours for each prey appearing in the diet matrix.}
-#'  \item{x}{the updated diet matrix with prey groupings as specified in the PreyTaxonSort.csv file.}
-#'  @references   Kuhnert, P.M., Duffy, L. M and Olson, R.J. (2012) The Analysis of Predator Diet 
-#'  and Stable Isotope Data, Journal of Statistical Software, In Prep. 
+#' @keywords colors, palette
 #'  
-#'  @seealso 
-#'  \code{\link{colors}}; \code{\link{palette}}; \code{\link{topo.colors}};
-#'  \code{\link{heat.colors}}; \code{\link{terrain.colors}}
+#' @examples 
+#' # Load the YFT diet data (of class diet)
+#' #data(yftdiet)  
+#' #class(yftdiet)
 #'  
-#'  @keywords colors, palette
-#'  
-#'  @examples 
-#'  # Load the YFT diet data (of class diet)
-#'  data(yftdiet)  
-#'  class(yftdiet)
-#'  
-#'  # Load the prey taxa data
-#'  data(PreyTaxonSort)
-#'  PreyTaxonSort
+#' # Load the prey taxa data
+#' #data(PreyTaxonSort)
+#' #PreyTaxonSort
 #'  
 #'  
-#'  # Example where no palette is given
-#'  val <- apc(x = yftdiet, preyfile = PreyTaxonSort, palette = NULL, check = TRUE)
-#'  node.colsY <- val$cols
-#'  dietPP <- val$x   # updated diet matrix with Group assigned prey taxa codes
-#'  head(dietPP)
+#' # Example where no palette is given
+#' #val <- apc(x = yftdiet, preyfile = PreyTaxonSort, palette = NULL, check = TRUE)
+#' #node.colsY <- val$cols
+#' #dietPP <- val$x   # updated diet matrix with Group assigned prey taxa codes
+#' #head(dietPP)
 #'  
-#'  # Example where palette is given
-#'  pal <- c(topo.colors(10)[1:2], heat.colors(10)[1:2], terrain.colors(25)[1:8])
-#'  val <- apc(x = yftdiet, preyfile = PreyTaxonSort, palette = pal, check = TRUE)
-#'  node.colsY <- val$cols
-#'  dietPP <- val$x   # updated diet matrix with Group assigned prey taxa codes
-#'  head(dietPP)  
-#'  @export
-  
-
+#' # Example where palette is given
+#' #pal <- c(topo.colors(10)[1:2], heat.colors(10)[1:2], terrain.colors(25)[1:8])
+#' #val <- apc(x = yftdiet, preyfile = PreyTaxonSort, palette = pal, check = TRUE)
+#' #node.colsY <- val$cols
+#' #dietPP <- val$x   # updated diet matrix with Group assigned prey taxa codes
+#' #head(dietPP)  
+#'  
+#'  
+#'  
+#' @export
 apc <- function(x, preyfile, palette = NULL, check = FALSE) 
   UseMethod("apc")
 
 #' @rdname apc
+#' @import "ggplot2" 
+#' @importFrom "utils" "read.csv"
+#' @importFrom "grDevices" "colorRampPalette" "topo.colors"
+#' @importFrom "methods" "Quote"
+#' @importFrom "gridExtra" "grid.arrange" 
+#' @export
 apc.diet <- function (x, preyfile, palette = NULL, check = FALSE) 
 {
   
@@ -151,8 +160,10 @@ apc.diet <- function (x, preyfile, palette = NULL, check = FALSE)
     z <- rep(1, length(node.cols))
     y <- 1:length(node.cols)
     cols <- rev(node.cols)
+  #  df <- data.frame(x, y, names(cols))
+  #  names(df) <- c("x", "y", "Species")
     df <- data.frame(x = z, y = y, Species = names(cols))
-    p <- ggplot(df, aes(x, y, color = Species)) + geom_point(shape = 15, size = 10)  +
+    p <- ggplot(df, aes_string("x", "y", color = "Species")) + geom_point(shape = 15, size = 10)  +
       scale_color_manual(values = cols) + xlab("") + ylab("") +
       theme_void() + ggtitle("Species Colours")  + 
       theme(plot.title = element_text(hjust = 0.5), plot.margin = unit(c(0,0,0,0), "mm"))

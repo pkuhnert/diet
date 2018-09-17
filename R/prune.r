@@ -18,23 +18,27 @@
 #' 
 #' @seealso \code{\link{dpart}}
 #' 
+#' @export
+#' 
 #' @examples 
 #' 
 #' # Load data
-#' data(yftdiet)  
+#' #data(yftdiet)  
+#' 
 #' # Load the prey taxa data
-#' data(PreyTaxonSort)
+#' #data(PreyTaxonSort)
+#' 
 #' # Assigning prey colours for default palette
-#' val <- apc(x = yftdiet, preyfile = PreyTaxonSort, check = TRUE)
-#' node.colsY <- val$cols
-#' dietPP <- val$x   # updated diet matrix with Group assigned prey taxa codes
+#' #val <- apc(x = yftdiet, preyfile = PreyTaxonSort, check = TRUE)
+#' #node.colsY <- val$cols
+#' #dietPP <- val$x   # updated diet matrix with Group assigned prey taxa codes
 #' 
 #' # Fitting the classification tree
-#' yft.dp <- dpart(Group ~ Lat + Lon + Year + Quarter + SST  + Length, 
-#'                   data = dietPP, weights = W, minsplit = 10,
-#'                                     cp = 0.001)
-#'                                     yft.pr <- prune(yft.dp, se = 1)
-#'                                     plot(yft.pr, node.cols = node.colsY)
+#' #yft.dp <- dpart(Group ~ Lat + Lon + Year + Quarter + SST  + Length, 
+#' #                   data = dietPP, weights = W, minsplit = 10,
+#' #                                     cp = 0.001)
+#' #yft.pr <- prune(yft.dp, se = 1)
+#' #plot(yft.pr, node.cols = node.colsY)
 
 
 prune <- function(tree, ...){

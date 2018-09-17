@@ -2,8 +2,11 @@
 #' 
 #' @description Produces a number of exploratory plots of the diet data
 #' 
+#' @aliases plot
+#' 
 #' @param x object of class \code{diet}. The result of reading in the data using either the
 #' \code{\link{read.dm}} and \code{link{read.pp}} functions.
+#' @param y NULL (not used)
 #' @param Xvar vector listing the names of x-variables to explore.
 #' @param LonID column name listing the longitude.
 #' @param LatID column name listing the latitude
@@ -29,12 +32,8 @@
 #' @param prey.cols colours for prey. If NULL, default colours are used.
 #' @param filenm Name of pdf file (with .pdf extension) where plots are produced. 
 #' Defaults to exploratory_plots.pdf
-#' @param \dots additional arguments passed to the function.
+#' @param ... additional arguments passed to the function.
 #' 
-#' @usage \method{plot}{diet}(x, Xvar, LonID, LatID, mapxlim, mapylim, PredSpID = NULL, SmXvar = NULL,
-#'                       leg.loc = "topleft", col = "black", Factor,
-#'                                             database = 'world', PredIDno = NULL, prey.cols = NULL, 
-#'                                                                   filenm = NULL, ...)
 #'                                                                   
 #' @details This function produces a number of exploratory plots. Here is a summary.
 #' (1) Maps:
@@ -48,13 +47,15 @@
 #' (4) Distributional summaries of the prey composition (by predator if predator ID is provided).
 #' (5) Summary statistics of the x-variables provided.
 #' 
-#' @value  A list consisting of:
+#' @return  A list consisting of:
+#' \itemize{
 #' \item{SmGAMOutput}{GAM fits for each variable specified in SmXvar has been specified.
 #' This is stored as a list.}
 #' \item{dataS1}{Data summary providing the minimum, maximum, mean, median, 1st and 3rd 
 #' quartiles of each variable in \code{x}}
 #' \item{dataS2}{vector specifying the number of observations, number of predators and number
 #' of species in \code{x}}
+#' }
 #' 
 #' @references   Kuhnert, P.M., Duffy, L. M and Olson, R.J. (2012) The Analysis of Predator Diet 
 #' and Stable Isotope Data, Journal of Statistical Software, In Prep. 
@@ -63,29 +64,37 @@
 #' 
 #' @keywords  exploratory
 #' 
+#' @import "ggplot2"
+#' @importFrom  "spaMM" "spaMM.colors"
+#' 
 #' @examples 
-# Load Data
-data(yftdiet)
-  
-# Load PreyTaxonSort file
-data(PreyTaxonSort)
-  
-# Assigning prey colours for default palette
-val <- apc(x = yftdiet, preyfile = PreyTaxonSort, check = TRUE)
-node.colsY <- val$cols
-dietPP <- val$x   # updated diet matrix with Group assigned prey taxa codes
-  
-explore.diet <- plot(x = dietPP, LonID = "Lon", LatID = "Lat", 
-                       Xvar = c("Quarter", "Year", "SST", "Length", "Lat", "Lon"),  
-                       PredSpID = "PredSpp", mapxlim = c(-125, -75), mapylim = c(0, 30),
-                       SmXvar = c("SST", "Length"), PredIDno = "TripSetPredNo", col = "gold3",
-                       Factor = "PredSpp", prey.cols = node.colsY)
-names(explore.diet)
-explore.diet$dataS2
-  
-
-
-plot.diet <- function(x, Xvar, LonID, LatID, mapxlim, mapylim, PredSpID = NULL, SmXvar = NULL,
+#' # Load Data
+#' #data(yftdiet)
+#' 
+#' # Load PreyTaxonSort file
+#' #data(PreyTaxonSort)
+#' 
+#' # Assigning prey colours for default palette
+#' #val <- apc(x = yftdiet, preyfile = PreyTaxonSort, check = TRUE)
+#' #node.colsY <- val$cols
+#' #dietPP <- val$x   # updated diet matrix with Group assigned prey taxa codes
+#' #explore.diet <- plot(x = dietPP, LonID = "Lon", LatID = "Lat", 
+#' #                        Xvar = c("Quarter", "Year", "SST", "Length", "Lat", "Lon"),  
+#' #                         PredSpID = "PredSpp", mapxlim = c(-125, -75), mapylim = c(0, 30),
+#' #                         SmXvar = c("SST", "Length"), PredIDno = "TripSetPredNo", col = "gold3",
+#' #                         Factor = "PredSpp", prey.cols = node.colsY)
+#' #  names(explore.diet)
+#' # explore.diet$dataS2
+#'                         
+#' @importFrom "grDevices" "pdf" "dev.off"
+#' @importFrom "GGally" "ggpairs"
+#' @importFrom "stats" "cor"
+#' @importFrom "reshape2" "melt"
+#' @import "rpart.plot"
+#' @import "graphics"
+#'                                                  
+#' @export
+plot.diet <- function(x, y = NULL, Xvar, LonID, LatID, mapxlim, mapylim, PredSpID = NULL, SmXvar = NULL,
                       leg.loc = "topleft", col = "black", Factor,
                       database = 'world', PredIDno = NULL, prey.cols = NULL, 
                       filenm = NULL, ...){
@@ -178,9 +187,12 @@ plot.diet <- function(x, Xvar, LonID, LatID, mapxlim, mapylim, PredSpID = NULL, 
         p1 <- p2  <-  list()
         bw <- apply(XvarC, 2, function(x) diff(range(x)))/10
         for(i in 1:ncol(XvarC)){
-            p1[[i]] <- ggplot(data.frame(x = rep(1, nrow(XvarC)), y = XvarC[,i]), aes(x, y)) +
+            dat <- data.frame(rep(1, nrow(XvarC)), XvarC[,i])
+            names(dat) <- c("x", "y")
+            p1[[i]] <- ggplot(dat, aes_string("x", "y")) +
+           # p1[[i]] <- ggplot(data.frame(x = rep(1, nrow(XvarC)), y = XvarC[,i]), aes(x, y)) +
             geom_boxplot(fill = "light blue")+ xlab("") + ylab(names(XvarC[i]))
-            p2[[i]] <- ggplot(data.frame(x = XvarC[,i]), aes(x)) + geom_histogram(binwidth = bw[i]) +
+            p2[[i]] <- ggplot(data.frame(x = XvarC[,i]), aes_string("x")) + geom_histogram(binwidth = bw[i]) +
                     ylab("") + xlab(names(XvarC[i]))
         }
 
@@ -202,7 +214,7 @@ plot.diet <- function(x, Xvar, LonID, LatID, mapxlim, mapylim, PredSpID = NULL, 
     else{
       for(i in 1:ncol(XvarF)){         
         x.tab <- data.frame(table(XvarF[,i])/sum(table(XvarF[,i])))
-        expl9 <- ggplot(data = x.tab, aes(Freq)) + geom_bar(color = "lightblue") +
+        expl9 <- ggplot(data = x.tab, aes_string("Freq")) + geom_bar(color = "lightblue") +
           xlab(names(XvarF)[i])
       }
     }
@@ -218,7 +230,7 @@ plot.diet <- function(x, Xvar, LonID, LatID, mapxlim, mapylim, PredSpID = NULL, 
   Xcor <- cor(as.matrix(XvarCF), method = "spearman", use = "pairwise.complete.obs")
   meltedXcor <- melt(Xcor)
   names(meltedXcor)[3] <- "rho"
-  expl10 <- ggplot(data = meltedXcor, aes(x = X1, y = X2, fill = rho)) + 
+  expl10 <- ggplot(data = meltedXcor, aes_string(x = "X1", y = "X2", fill = "rho")) + 
     geom_tile() + xlab("") +
     ylab("") + ggtitle("Spearman Rank Correlation of X-variables")
 
@@ -236,7 +248,7 @@ plot.diet <- function(x, Xvar, LonID, LatID, mapxlim, mapylim, PredSpID = NULL, 
           SmXvar variable using the mgcv package and assuming normality. Users should check 
           the fit of each model to see whether these assumptions hold.\n\n")
       res <- smplot <- list()
-      
+
       SmXdat <- data.matrix(x[,SmXvar]) 
       palette <- spaMM.colors()
       projection <- "+proj=longlat +datum=WGS84"
@@ -265,9 +277,13 @@ plot.diet <- function(x, Xvar, LonID, LatID, mapxlim, mapylim, PredSpID = NULL, 
                        nprey = length(levels(x$Group)))
   
 
-  
-    list(SmGAMOutput = lapply(res,summary), dataS1 = sum.x, dataS2 = sum.x2,
-         expl1 = expl1, expl3 = expl3, expl4= expl4, expl5 = expl5,
-         expl6 = expl6, expl7 = expl7, expl8 = expl8, expl9 = expl9, expl10 = expl10,
-         plotSpComp = plotSpComp, smplot = smplot)
+  list(SmGAMOutput = lapply(res,summary), dataS1 = sum.x, dataS2 = sum.x2,
+       expl1 = expl1, expl3 = expl3, expl4= expl4, expl5 = expl5,
+       expl6 = expl6, expl7 = expl7, expl8 = expl8, expl9 = expl9, expl10 = expl10,
+       plotSpComp = plotSpComp, smplot = smplot)
+ 
 }
+
+#' @export
+plot <- function(x, y, ...)
+  UseMethod("plot")

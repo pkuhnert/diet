@@ -22,36 +22,37 @@
 #' 
 #' @examples 
 #' # Load data
-#' data(yftdiet)  
+#' #data(yftdiet)  
+#' 
 #' # Load the prey taxa data
-#' data(PreyTaxonSort)
+#' #data(PreyTaxonSort)
 #' 
 #' # Assigning prey colours for default palette
-#' val <- apc(x = yftdiet, preyfile = PreyTaxonSort, check = TRUE)
-#' node.colsY <- val$cols
-#' dietPP <- val$x   # updated diet matrix with Group assigned prey taxa codes
+#' #val <- apc(x = yftdiet, preyfile = PreyTaxonSort, check = TRUE)
+#' #node.colsY <- val$cols
+#' #dietPP <- val$x   # updated diet matrix with Group assigned prey taxa codes
 #' 
 #' # Fitting the classification tree
-#' yft.dp <- dpart(Group ~ Lat + Lon + Year + Quarter + SST  + Length, 
-#'                   data = dietPP, weights = W, minsplit = 10,
-#'                                     cp = 0.001)
+#' #yft.dp <- dpart(Group ~ Lat + Lon + Year + Quarter + SST  + Length, 
+#' #                   data = dietPP, weights = W, minsplit = 10,
+#' #                                     cp = 0.001)
 #'                                     
 #' # Pruning the tree
-#' yft.pr <- prune(yft.dp, se = 1)                   
+#' #yft.pr <- prune(yft.dp, se = 1)                   
 #' 
 #' # Checking residuals
-#' yft.resid <- resids(yft.pr, LonID = "Lon", LatID = "Lat", 
-#'     predID = "TripSetPredNo", plot = TRUE) # need to compute resids from bootstrapping
+#' #yft.resid <- resids(yft.pr, LonID = "Lon", LatID = "Lat", 
+#' #     predID = "TripSetPredNo", plot = TRUE) # need to compute resids from bootstrapping
 #'     
 #' # Bagging
 #' # Bagging with NO spatial bootstrapping (nBaggs set to something small)
-#' yft.bag <- bagging(Group ~ Lat + Lon + Year + Quarter + SST  + Length,
-#'                     data = dietPP, weights = W, minsplit = 50,
-#'                     cp = 0.001, nBaggs = 10, predID = "TripSetPredNo")
+#' #yft.bag <- bagging(Group ~ Lat + Lon + Year + Quarter + SST  + Length,
+#' #                     data = dietPP, weights = W, minsplit = 50,
+#' #                     cp = 0.001, nBaggs = 10, predID = "TripSetPredNo")
 #'                     
-#'                     # Checking for spatial dependence
-#'                     yft.bag.resid <- resids(yft.bag, LonID = "Lon", LatID = "Lat", 
-#'                     predID = "TripSetPredNo", plot = TRUE) # need to compute resids from bootstrapping
+#' # Checking for spatial dependence
+#' #yft.bag.resid <- resids(yft.bag, LonID = "Lon", LatID = "Lat", 
+#' #predID = "TripSetPredNo", plot = TRUE) # need to compute resids from bootstrapping
 #'                     
 #' @export                     
 

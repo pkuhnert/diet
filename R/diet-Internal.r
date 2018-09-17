@@ -8,6 +8,331 @@
 #' @import ggplot2
 #' 
 
+#' @rdname diet-Internal
+rpart.matrix <- function (frame) 
+{
+  if (!inherits(frame, "data.frame")) 
+    return(as.matrix(frame))
+  frame$"(weights)" <- NULL
+  terms <- attr(frame, "terms")
+  if (is.null(terms)) 
+    predictors <- names(frame)
+  else {
+    a <- attributes(terms)
+    predictors <- as.character(a$variables)[-1L]
+    removals <- NULL
+    if ((TT <- a$response) > 0L) {
+      removals <- TT
+      frame[[predictors[TT]]] <- NULL
+    }
+    if (!is.null(TT <- a$offset)) {
+      removals <- c(removals, TT)
+      frame[[predictors[TT]]] <- NULL
+    }
+    if (!is.null(removals)) 
+      predictors <- predictors[-removals]
+    labels <- a$term.labels
+    if (abs(length(labels) - length(predictors)) > 0) 
+      predictors <- predictors[match(labels, predictors)]
+  }
+  factors <- sapply(frame, function(x) !is.null(levels(x)))
+  characters <- sapply(frame, is.character)
+  if (any(factors | characters)) {
+    for (preds in predictors[characters]) frame[[preds]] <- as.factor(frame[[preds]])
+    factors <- factors | characters
+    column.levels <- lapply(frame[factors], levels)
+    for (preds in predictors[factors]) frame[[preds]] <- as.numeric(frame[[preds]])
+    x <- as.matrix(frame)
+    attr(x, "column.levels") <- column.levels
+  }
+  else x <- as.matrix(frame[predictors])
+  class(x) <- "rpart.matrix"
+  x
+}
+
+
+#' @rdname diet-Internal
+#' @importFrom "grDevices" "dev.cur"
+rpart.branch <- function (x, y, node, branch)
+  {
+    
+    if (missing(branch)) {
+      if (exists(parms <- paste(".rpart.parms", dev.cur(),
+                                sep = "."), envir = .GlobalEnv)) {
+        parms <- get(parms, envir = .GlobalEnv)
+        branch <- parms$branch
+      }
+      else branch <- 0
+    }
+    
+    is.left <- (node%%2 == 0)
+    node.left <- node[is.left]
+    parent <- match(node.left/2, node)
+    sibling <- match(node.left + 1, node)
+    temp <- (x[sibling] - x[is.left]) * (1 - branch)/2
+    xx <- rbind(x[is.left], x[is.left] + temp, x[sibling] - temp,
+                x[sibling], NA)
+    yy <- rbind(y[is.left], y[parent], y[parent], y[sibling],
+                NA)
+    list(x = xx, y = yy, nodeL = node[is.left], nodeR = node[sibling])
+  }
+
+
+
+#' @rdname diet-Internal
+rpconvert <- function (x) 
+{
+  if (!inherits(x, "rpart")) 
+    stop("x does not appear to be an rpart object")
+  ff <- x$frame
+  if (is.null(ff$splits)) {
+    warning("x not converted")
+    return(x)
+  }
+  ff$splits <- NULL
+  ff$wt <- ff$n
+  xlev <- attr(x, "xlevels")
+  if (length(xlev) > 0) {
+    zz <- as.numeric(names(xlev))
+    names(xlev) <- attr(x$terms, "term.labels")[zz]
+    attr(x, "xlevels") <- xlev
+  }
+  if (x$method == "class") {
+    temp <- cbind(ff$yval, ff$yval2, ff$yprob)
+    dimnames(temp) <- NULL
+    ff$yval2 <- temp
+    ff$yprob <- NULL
+    x$frame <- ff
+    temp <- rpart:::rpart.class(c(1, 1, 2, 2), NULL, wt = c(1, 1, 
+                                                            1, 1))
+    #temp <- rpart.class(c(1, 1, 2, 2), NULL, wt = c(1, 1, 
+    #                                                        1, 1))
+    x$functions <- list(summary = temp$summary, print = temp$print, 
+                        text = temp$text)
+  }
+  else if (x$method == "anova") {
+    x$frame <- ff
+    temp <- rpart:::rpart.anova(1:5, NULL, wt = rep(1, 5))
+   # temp <- rpart.anova(1:5, NULL, wt = rep(1, 5))
+    x$functions <- list(summary = temp$summary, text = temp$text)
+  }
+  else {
+    ff$yval2 <- cbind(ff$yval, ff$yval2)
+    x$frame <- ff
+    temp <- rpart:::rpart.poisson(1:5, NULL, wt = rep(1, 5))
+   # temp <- rpart.poisson(1:5, NULL, wt = rep(1, 5))
+    x$functions <- list(summary = temp$summary, text = temp$text)
+  }
+  class(x) <- "rpart"
+  x
+}
+
+
+
+
+#' @rdname diet-Internal
+#' @import "lattice"
+SpeciesCompBar <- function(x, prey.cols, Factor, Species){
+  
+  ######################################################  
+  # Overall Summary of data  
+  ########################################################
+  
+  # Distribution
+  prey.tab <- table(x$Group)/sum(table(x$Group))
+  
+  bcDist <- barchart(prey.tab ~ names(prey.tab),  scales = list(x = list(rot = 45)), 
+                     main = paste("Distribution of ", Species), col = "skyblue", ylab = "Proportion")
+  #plot(val)
+  
+  # Composition
+  unF <- levels(x[,Factor])
+  x.tab <- list()
+  for(j in 1:length(unF)){
+    datF <- x[x[,Factor] == unF[j],]
+    x.tab[[j]] <- tapply(datF$W, datF$Group, sum)
+    x.tab[[j]][is.na(x.tab[[j]])] <- 0
+  }
+  names(x.tab) <- unF
+  
+  
+  n <- unlist(lapply(x.tab, length))
+  
+  
+  x.tab.df <- data.frame(cbind(unlist(x.tab), rep(as.vector(levels(x$Group)), length(levels(x[,Factor]))), 
+                               rep(names(n), n)))
+  
+  names(x.tab.df) <- c("y", "Factor", "Group")
+  row.names(x.tab.df) <- NULL
+  x.tab.df$y <- as.numeric(as.vector(x.tab.df$y))
+  
+  tab <- tapply(x.tab.df$y, x.tab.df$Group, function(x) x/sum(x))
+  x.bp <- data.frame(cbind(unlist(tab), rep(names(tab), lapply(tab, length)),
+                           rep(levels(x$Group), length(tab))))
+  names(x.bp) <- c("y", "Factor", "Group")
+  x.bp$y <- as.numeric(as.vector(x.bp$y))
+  x.bp$y[is.nan(x.bp$y)] <- 0
+  if(!is.null(prey.cols))
+    x.bp$Group <- factor(as.vector(x.bp$Group), levels = names(prey.cols))
+  
+  
+  if(!is.null(prey.cols)){
+    trel.def <- trellis.par.get("superpose.polygon")
+    trel.def$col <- prey.cols
+    trellis.par.set("superpose.polygon", trel.def)
+  }
+  
+  bc <- barchart(y ~ Factor, groups = x.bp$Group,  data = x.bp, stack = TRUE, 
+                 scales = list(x = list(rot = 45)),
+                 auto.key = list(space = "right"), ylim = c(0,1), 
+                 main = paste("Composition of", Species), ylab = "Proportion")
+  #plot(val)
+  
+  ######################################################  
+  # Summary of data by year 
+  ########################################################
+  
+  unyr <- sort(unique(x$Year))
+  bc.yr <- list()
+  for(i in 1:length(unyr)){
+    dat <- x[x$Year == unyr[i] & !is.na(x$Year),]
+    prey.tab <- table(dat$Group)/sum(table(dat$Group))
+    bc.yr[[i]] <- barchart(prey.tab ~ names(prey.tab),  scales = list(x = list(rot = 45)), 
+                           main = paste("Distribution of ", Species, ": ", unyr[i]), col = "skyblue", ylim = c(0,1), ylab = "Proportion")
+    
+  }
+  
+  for(i in 1:length(unyr)){
+    dat <- x[x$Year == unyr[i] & !is.na(x$Year),]
+    
+    unF <- levels(dat[,Factor])
+    x.tab <- list()
+    for(j in 1:length(unF)){
+      datF <- dat[dat[,Factor] == unF[j],]
+      x.tab[[j]] <- tapply(datF$W, datF$Group, sum)
+      x.tab[[j]][is.na(x.tab[[j]])] <- 0
+    }
+    names(x.tab) <- unF
+    
+    
+    n <- unlist(lapply(x.tab, length))
+    
+    
+    x.tab.df <- data.frame(cbind(unlist(x.tab), rep(as.vector(levels(dat$Group)), length(levels(dat[,Factor]))), 
+                                 rep(names(n), n)))
+    
+    names(x.tab.df) <- c("y", "Factor", "Group")
+    row.names(x.tab.df) <- NULL
+    x.tab.df$y <- as.numeric(as.vector(x.tab.df$y))
+    
+    tab <- tapply(x.tab.df$y, x.tab.df$Group, function(x) x/sum(x))
+    x.bp <- data.frame(cbind(unlist(tab), rep(names(tab), lapply(tab, length)),
+                             rep(levels(dat$Group), length(tab))))
+    names(x.bp) <- c("y", "Factor", "Group")
+    x.bp$y <- as.numeric(as.vector(x.bp$y))
+    x.bp$y[is.nan(x.bp$y)] <- 0
+    if(!is.null(prey.cols))
+      x.bp$Group <- factor(as.vector(x.bp$Group), levels = names(prey.cols))
+    
+    
+    if(!is.null(prey.cols)){
+      trel.def <- trellis.par.get("superpose.polygon")
+      trel.def$col <- prey.cols
+      trellis.par.set("superpose.polygon", trel.def)
+    }
+    
+    bc.grp <- barchart(y ~ Factor, groups = x.bp$Group,  data = x.bp, stack = TRUE, 
+                       scales = list(x = list(rot = 45)),
+                       auto.key = list(space = "right"), ylim = c(0,1), 
+                       main = paste("Composition of", Species, ": ", unyr[i]), ylab = "Proportion")
+    
+  }
+  
+  list(bcDist = bcDist, bc = bc, bc.yr = bc.yr, bc.grp = bc.grp)
+  
+}
+
+
+#' @rdname diet-Internal
+subsample <- function(dat, ID, n){
+
+x <- NULL
+unID <- unique(ID)
+t.ID <- table(ID)
+if(all(t.ID <= n))
+  x <- dat
+else{
+  # do subsampling
+  for(i in 1:length(unID)){
+    subdat <- subset(dat, ID == unID[i])
+    if(is.null(n))
+      x <- rbind(x, subdat[sample(1:nrow(subdat), size = nrow(subdat), replace = TRUE),])
+    else
+      if(nrow(subdat) <= n)
+        x <- rbind(x, subdat[sample(1:nrow(subdat), size = nrow(subdat), replace = TRUE),])
+      else
+        x <- rbind(x, subdat[sample(1:nrow(subdat), size = n, replace = TRUE),])
+  }
+}
+
+
+
+x
+
+}
+
+
+
+
+#' @rdname diet-Internal
+#' @import "graphics"
+spatialsamp <- function(x, LonID, LatID, sizeofgrid = 5, ID = NULL, nsub = NULL, Plot = FALSE){
+
+
+lon.seq <- seq(min(x[,LonID], na.rm = TRUE), max(x[,LonID], na.rm = TRUE),
+               by = sizeofgrid)
+lat.seq <- seq(from = min(x[,LatID], na.rm = TRUE), to = max(x[,LatID], na.rm = TRUE),
+               by = sizeofgrid)
+
+if(Plot){
+  plot(x[,LonID], x[,LatID], pch = 16, cex = 0.7)
+  abline(h = lat.seq, lty = 3, col = "grey")
+  abline(v = lon.seq, lty = 3, col = "grey")
+}
+
+gx <- cut(x[,LonID], lon.seq, include.lowest = TRUE)
+gy <- cut(x[,LatID], lat.seq, include.lowest = TRUE)
+ugx <- unique(gx)
+ugy <- unique(gy)
+subsamp <- NULL
+k <- 1
+
+for(i in 1:length(ugx)){
+  for(j in 1:length(ugy)){
+    
+    ids <- (1:nrow(x))[gx %in% ugx[i] & gy %in% ugy[j]]
+    samp <- x[ids,]
+    if(Plot)
+      with(samp, points(Lon, Lat, pch = 16, col = k, cex = 0.7))
+    
+    if(is.null(nsub)){
+      Ssamp <- sample(1:nrow(samp), nrow(samp), replace = TRUE)
+      subsamp <- rbind(subsamp, samp[Ssamp,])
+    }
+    else{
+      Ssamp <- subsample(dat = samp, ID = samp[,ID], n = nsub)
+      subsamp <- rbind(subsamp, Ssamp)
+    }
+    k <- k+1
+  }
+}
+
+subsamp
+
+}
+
+
+
 
 
 
@@ -39,6 +364,10 @@ formOmat <- function(object, ID){
 }
 
 #' @rdname diet-Internal
+#' @import "grDevices"
+#' @importFrom "mgcv" "gam"
+#' @importFrom "mgcv" "predict.gam"
+#' @importFrom "mgcv" "exclude.too.far"
 Vis.Gam <- function (x, view = NULL, cond = list(), n.grid = 30, too.far = 0, 
                      col = NA, color = "heat", contour.col = NULL, se = -1, type = "link", 
                      plot.type = "persp", zlim = NULL, nCol = 50, ...) 
@@ -553,8 +882,7 @@ vis.igam <- function (x, view = NULL, cond = list(), n.grid = 30, too.far = 0,
 
 
 #' @rdname diet-Internal
-textG.dpart <-
-  function (x, splits = TRUE, which = 4, label = "yval", FUN = text,
+textG.dpart <- function (x, splits = TRUE, which = 4, label = "yval", FUN = text,
             all.leaves = FALSE, pretty = NULL, digits = getOption("digits") - 
               2, tadj = 0.65,  use.n = FALSE, bars = TRUE,
             xadj = 1, yadj = 1, bord = FALSE, node.cols = NULL, pos = NULL,
@@ -835,6 +1163,8 @@ snip.dpart <- function (x, toss)
 
 
 #' @rdname diet-Internal
+#' @import "grDevices"
+#' @import "graphics"
 snip.dpart.mouse <- function (tree, parms = paste(".rpart.parms", dev.cur(), sep = ".")) 
 {
   
@@ -887,6 +1217,7 @@ snip.dpart.mouse <- function (tree, parms = paste(".rpart.parms", dev.cur(), sep
 
 
 #' @rdname diet-Internal
+#' @import "graphics"
 select.tree.dpart <- function(object, se, nsplits){
     
     if(missing(se) && missing(nsplits))
@@ -950,6 +1281,7 @@ select.tree <- function(object, ...)
   UseMethod("select.tree")
 
 #' @rdname diet-Internal
+#' @import "graphics"
 rsq.dpart <- function (x, rn) {
   if (!inherits(x, "dpart")) 
     stop("Not legitimate rpart")
@@ -986,6 +1318,7 @@ rsq.dpart <- function (x, rn) {
 rsq <- function(x, ...) UseMethod("rsq")
 
 #' @rdname diet-Internal
+#' @importFrom "grDevices" "dev.cur"
 rpartco.dpart <- function (tree, parms = paste(".rpart.parms", dev.cur(), sep = "."))
   {
     
@@ -1082,6 +1415,7 @@ plotG.dpart <- function(x, node.cols = NULL, pos = NULL, ...){
   
   #  plot(x, keep.margins = TRUE, ...)
   rpart:::plot.rpart(x, ...)
+  #plot.rpart(x, ...)
   textG.dpart(x, xpd = NA, pretty = TRUE, splits = TRUE, node.cols = node.cols, 
               pos = pos,  ...)
   
@@ -1112,8 +1446,8 @@ plotG.dpart <- function(x, node.cols = NULL, pos = NULL, ...){
 
 
 #' @rdname diet-Internal
-outside <-
-  function(polyx, polyy, x, y)
+#' @importFrom "grDevices" "chull"
+outside <- function(polyx, polyy, x, y)
   {
     # This function is used in Mask and locates any values inside the
     # convex hull.
@@ -1185,6 +1519,7 @@ na.dpart <- function (x)
 }
 
 #' @rdname diet-Internal
+#' @importFrom "grDevices" "chull"
 mask <- function(gridx, gridy, x, y)
 {
   
@@ -1210,6 +1545,7 @@ mask <- function(gridx, gridy, x, y)
 
 
 #' @rdname diet-Internal
+#' @importFrom "stats" "reorder"
 explore.bag <- function(object, node, cols = NULL, showtitle = FALSE, axis.side = 2, cex = 1.0, ylim){
 
 if(!(axis.side == 2 | axis.side ==4))
@@ -1225,8 +1561,12 @@ bars <- barplot(object$m[bID,], plot = FALSE)
 x <- as.vector(bars)
 
 
-nodevals <- data.frame(m = object$m[bID,], lci95 = object$lci95[bID,], 
-                       uci95 = object$uci95[bID,], prey = names(data.frame(object$m)))
+#nodevals <- data.frame(m = object$m[bID,], lci95 = object$lci95[bID,], 
+#                       uci95 = object$uci95[bID,], prey = names(data.frame(object$m)))
+nodevals <- data.frame(object$m[bID,], object$lci95[bID,], 
+                       object$uci95[bID,], names(data.frame(object$m)))
+names(nodevals) <- c("m", "lci95", "uci95", "prey")
+
 tmp <- as.matrix(nodevals[,2:3])
 id <- apply(tmp, 1, function(x){ all(x == 0)})
 nodevals[id,1:3] <- NA
@@ -1234,8 +1574,8 @@ nodevals[id,1:3] <- NA
 preyO <- 1:length(nodevals$prey)
 
 
-p <- ggplot(nodevals, mapping = aes(x = reorder(prey, preyO), y = lci95)) + 
-  geom_segment(stat = "identity", aes(xend = prey, yend = uci95, 
+p <- ggplot(nodevals, mapping = aes_string(x = reorder("prey", preyO), y = "lci95")) + 
+  geom_segment(stat = "identity", aes_string(xend = "prey", yend = "uci95", 
                                       colour = reorder(cols, preyO)), 
                lineend = "butt", size = 1.5, 
                arrow = arrow(ends = "both", angle = 90, length = unit(0.1, "cm"),
@@ -1254,16 +1594,18 @@ data.frame(m = object$m[bID,], v = object$v[bID,], lci95 = object$lci95[bID,],
 }
 
 #' @rdname diet-Internal
+#' @importFrom "graphics" "par"
+#' @importFrom "stats" "reorder"
 explore <- function(object, pred, pred.where, loss = NULL, node, cols = NULL,
                     showtitle = FALSE, labels = TRUE, cex = 1.0, ylim){
-  
+
   pred.node <- pred[pred.where == paste(node),]
   if(length(pred.node) == 0)
     print(cat(paste("No data at node", node, "\n")))
   else if(is.null(nrow(pred.node)))
     pred.node.m <- pred.node
   else
-    pred.node.m <- apply(pred.node, 2, mean)
+    pred.node.m <- apply(as.matrix(pred.node), 2, mean)
   
   if(showtitle)
     par(mar = c(6,4,4,2)+0.1)
@@ -1282,9 +1624,9 @@ explore <- function(object, pred, pred.where, loss = NULL, node, cols = NULL,
   if(missing(ylim))
     ylim <- c(-0.05,1.05)
   
-  
-  preyO <- 1:length(pred.node)
-  p <- ggplot(mapping = aes(x = reorder(names(pred.node),preyO), 
+
+  preyO <- 1:length(pred.node.m)
+  p <- ggplot(mapping = aes(x = reorder(names(data.frame(pred.node)),preyO), 
                             y = pred.node.m)) + 
     geom_bar(stat = "identity", aes(fill = reorder(cols, preyO))) + 
     scale_fill_manual(values = as.vector(cols), labels = names(cols), name = "Prey")  +
@@ -1302,6 +1644,7 @@ explore <- function(object, pred, pred.where, loss = NULL, node, cols = NULL,
 
 
 #' @rdname diet-Internal
+#' @importFrom "utils" "write.csv"
 writepn.csv <- function(x){
   
   if (!inherits(x, "diet"))
@@ -1316,3 +1659,85 @@ writepn.csv <- function(x){
   
   
 }
+
+
+
+#' @rdname diet-Internal
+#' @importFrom "mgcv" "gam"
+#' @import "sp"
+#' @import "spaMM" 
+#' @importFrom "raster" "raster"
+#' @import "lattice"
+#' @importFrom "rasterVis" "levelplot"
+#' @importFrom "utils" "data"
+SmPlots <- function(x, i, SmXvar, SmXdat, LonID, LatID, projection, palette, too.far = 0.05){
+  
+  tmpdat <- data.frame(SmXdat[,i], x[,LonID], x[,LatID])
+  names(tmpdat) <- c("y", "Longitude", "Latitude")
+  
+  #tmpdat <- data.frame(y = SmXdat[,i], Longitude = x[,LonID], Latitude = x[,LatID])
+  res <- gam(y ~ s(tmpdat$Longitude, tmpdat$Latitude), data = tmpdat)
+
+ # data(worldcountries)
+  plotfit <- Vis.Gam(res, too.far = too.far, plot.type = "contour", add = FALSE)
+  mat <- plotfit$mat
+  names(mat) <- c("Longitude", "Latitude", "z")
+  
+  coordinates(mat) <- ~Longitude+Latitude  # coordinates are being set for the raster
+  proj4string(mat) <- CRS(projection)  # projection is being set for the raster
+  gridded(mat) <- TRUE  # a gridded structure is being set for the raster
+  mat.raster <- raster(mat)  # the raster is being created
+  
+  zext <- range(mat$z, na.rm = TRUE)
+  # Set up of plot
+
+  p <- levelplot(mat.raster, maxpixels=4e6, margin=FALSE, cuts=length(palette)-1, col.regions=palette,
+                 xlab = "", ylab = "", at = seq(zext[1], zext[2], length = 50),
+                 main = SmXvar[i])
+  
+  # country layer
+  country.layer <- layer(
+    sp.polygons(worldcountries, fill=data$fill, col = data$col),
+    data=list(sp.polygons=sp.polygons, worldcountries=worldcountries, 
+              fill="darkgray", col = "lightgray") 
+  )
+  
+  # points layer
+  points.layer <- layer(
+    panel.points(tmpdat$Longitude, tmpdat$Latitude, pch = 16, col = "black", cex = 0.6),
+    data = tmpdat
+  )
+  
+  
+  smplot <- p + country.layer + points.layer
+  
+  list(res = res, smplot = smplot)
+}
+
+
+#' @rdname diet-Internal
+#' @import "geoR"
+Distance <- function(O, P, type = "Hellinger"){
+  
+  # O = observed matrix
+  # P = predicted matrix
+  
+  W <- rowSums(O)
+  rW <- W/sum(W)
+  
+  
+  if(type == "KL"){
+    KLDist <- function(O,E) rowSums(O*log((O + (O==0))/E))
+    d <- sum(rW * (KLr <- KLDist(O, P)))
+    val <- list(Dist = KLr, d = d)
+    
+  }
+  else if(type == "Hellinger"){
+    HDist <- function(O, E) sqrt(0.5*rowSums((sqrt(O) - sqrt(E))^2))
+    d <- sum(rW * (Hr <- HDist(O, P)))
+    val <- list(Dist = Hr, d = d)
+  }
+  
+  val
+}
+

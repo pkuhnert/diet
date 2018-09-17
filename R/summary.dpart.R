@@ -7,10 +7,8 @@
 #' @param digits Number of significant digits to be used in the result.
 #' @param file write the output to a given file name. (Full listings of a tree are often quite long).
 #' Default file name is \code{tree_output.txt}.
-#' @param \dots additional arguments affecting the summary produced
+#' @param ... additional arguments affecting the summary produced
 #' 
-#' @usage \method{summary}{dpart}(object, cp = 0, digits = getOption("digits"), 
-#' file = "tree_output.txt", ...)
 #' 
 #' @details   This function is a method for the generic function summary for class \code{dpart}. 
 #' It can be invoked by calling summary for an object of the appropriate class, 
@@ -20,27 +18,30 @@
 #' @seealso   \code{\link{summary}}, \code{\link{dpart}}, \code{\link{print.dpart}} 
 #' 
 #' @examples 
-# Load data
-data(yftdiet)  
-# Load the prey taxa data
-data(PreyTaxonSort)
-  
-# Assigning prey colours for default palette
-val <- apc(x = yftdiet, preyfile = PreyTaxonSort, check = TRUE)
-node.colsY <- val$cols
-dietPP <- val$x   # updated diet matrix with Group assigned prey taxa codes
-  
-# Fitting the classification tree
-yft.dp <- dpart(Group ~ Lat + Lon + Year + Quarter + SST  + Length, 
-                  data = dietPP, weights = W, minsplit = 10,
-                  cp = 0.001)
-plot(yft.dp, node.cols = node.colsY)
-summary(yft.dp)
-print(yft.dp, setID = "TripSetNo")
+#' # Load data
+#' #data(yftdiet)  
+#' 
+#' # Load the prey taxa data
+#' #data(PreyTaxonSort)
+#' 
+#' # Assigning prey colours for default palette
+#' #val <- apc(x = yftdiet, preyfile = PreyTaxonSort, check = TRUE)
+#' #node.colsY <- val$cols
+#' #dietPP <- val$x   # updated diet matrix with Group assigned prey taxa codes
+#' 
+#' # Fitting the classification tree
+#' #yft.dp <- dpart(Group ~ Lat + Lon + Year + Quarter + SST  + Length, 
+#'#                   data = dietPP, weights = W, minsplit = 10,
+#' #                                    cp = 0.001)
+#'                                     
+#' #plot(yft.dp, node.cols = node.colsY)
+#' #summary(yft.dp)
+#' #print(yft.dp, setID = "TripSetNo")
+#' @export
+summary <- function(object, ...) 
+  UseMethod("summary")
 
-
-
-
+#' @rdname summary
 summary.dpart <- function(object, cp = 0, digits = getOption("digits"), file = "tree_output.txt", ...){
 
 
@@ -51,9 +52,9 @@ summary.dpart <- function(object, cp = 0, digits = getOption("digits"), file = "
 }
 
 
-#' @rdname summary.dpart
-summary.rpart <-
-  function(object, cp=0, digits=getOption("digits"), file,  ...)
+#' @rdname summary
+#' @import "stats"
+summary.rpart <- function(object, cp=0, digits=getOption("digits"), file,  ...)
   {
     if(!inherits(object, "rpart")) stop("Not legitimate rpart object")
     

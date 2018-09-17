@@ -16,8 +16,6 @@
 #' @param orderN  logical. Should the node outputs be ordered.
 #' 
 #' 
-#' @usage \method{link}{bag}(x, object, LatID, LonID, mapxlim = NULL, mapylim = NULL, 
-#' plot = TRUE, oob = FALSE, mfrow = c(2, 2), orderN = FALSE)
 #' 
 #' @return a list containing the following items:
 #' \item{m}{matrix of mean proportions}
@@ -41,38 +39,34 @@
 #' @seealso   \code{\link{bagging}}
 #' @examples 
 #' # Load data
-#' data(yftdiet)  
+#' #data(yftdiet)  
 #' # Load the prey taxa data
-#' data(PreyTaxonSort)
+#' #data(PreyTaxonSort)
 #' 
 #' # Assigning prey colours for default palette
-#' val <- apc(x = yftdiet, preyfile = PreyTaxonSort, check = TRUE)
-#' node.colsY <- val$cols
-#' dietPP <- val$x   # updated diet matrix with Group assigned prey taxa codes
+#' #val <- apc(x = yftdiet, preyfile = PreyTaxonSort, check = TRUE)
+#' #node.colsY <- val$cols
+#' #dietPP <- val$x   # updated diet matrix with Group assigned prey taxa codes
 #' 
 #' # Fitting the classification tree
-#' yft.dp <- dpart(Group ~ Lat + Lon + Year + Quarter + SST  + Length, 
-#'                   data = dietPP, weights = W, minsplit = 10,
-#'                                     cp = 0.001)
-#' yft.pr <- prune(yft.dp, se = 1)
-#' plot(yft.pr, node.cols = node.colsY)
+#' #yft.dp <- dpart(Group ~ Lat + Lon + Year + Quarter + SST  + Length, 
+#' #                   data = dietPP, weights = W, minsplit = 10,
+#' #                                     cp = 0.001)
+#' #yft.pr <- prune(yft.dp, se = 1)
+#' #plot(yft.pr, node.cols = node.colsY)
 #' 
 #' # Bagging
 #' # Bagging with NO spatial bootstrapping
-#' yft.bag <- bagging(Group ~ Lat + Lon + Year + Quarter + SST  + Length,
-#'                      data = dietPP, weights = W, minsplit = 50,
-#'                      cp = 0.001, nBaggs = 500, predID = "TripSetPredNo")
+#' #yft.bag <- bagging(Group ~ Lat + Lon + Year + Quarter + SST  + Length,
+#' #                      data = dietPP, weights = W, minsplit = 50,
+#' #                      cp = 0.001, nBaggs = 500, predID = "TripSetPredNo")
 #'                      
 #' # Link the predictions back to terminal nodes of a tree and plot 
-#' ex.bag.l <- link(x = yft.bag, object = yft.pr, LatID = "Lat", LonID = "Lon",
-#'                    mapxlim = c(-125, -75), mapylim = c(0, 30), plot = TRUE, oob = TRUE, 
-#'                    mfrow = c(2,2))
+#' #ex.bag.l <- link(x = yft.bag, object = yft.pr, LatID = "Lat", LonID = "Lon",
+#' #                  mapxlim = c(-125, -75), mapylim = c(0, 30), plot = TRUE, oob = TRUE, 
+#' #                  mfrow = c(2,2))
 #'                    
-#'  @export                  
-  
-
-
-
+#' @export                  
 link <- function(x, object, LatID, LonID, mapxlim, mapylim,
    plot = TRUE, oob = FALSE, mfrow = c(2,2), orderN = FALSE) 
   UseMethod("link")
@@ -111,6 +105,7 @@ link.bag <- function(x, object, LatID, LonID, mapxlim = NULL, mapylim = NULL,
   options(warn = -1)
   for(i in 1:nBaggs){
     if(oob){  # need to ensure all nodes are represented in the list 
+      #where <- pred.rpart(object, rpart.matrix(x$data[paste(x$oob[[i]]),]))
       where <- rpart:::pred.rpart(object, rpart.matrix(x$data[paste(x$oob[[i]]),]))
       tmp <- apply(x$pred.oob[[i]], 2, function(x, wh) tapply(x, wh, mean), where)
       n.nms <- names(table(where))
@@ -137,7 +132,7 @@ link.bag <- function(x, object, LatID, LonID, mapxlim = NULL, mapylim = NULL,
   }
   
   if(plot){
-    if(dev.cur() == 1) windows(8,8, record = TRUE)
+   # if(dev.cur() == 1) windows(8,8, record = TRUE)
     par(mfrow=mfrow)
     nc <- ncol(bpred.m)
     

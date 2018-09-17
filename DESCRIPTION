@@ -1,13 +1,35 @@
 Package: diet
-Version: 0.91
-Date: 2017-03-11
+Type: Package
+Version: 1.0
+Date: 2018-09-05
 Title: Performs an analysis of diet data using univariate trees
-Author: Petra Kuhnert, with contributions from Leanne Duffy
+Authors@R: c(person("Petra", "Kuhnert", email = "Petra.Kuhnert@data61.csiro.au", role = c("aut", "cre")),
+           person("Leanne", "Duffy", email = "lduffy@iattc.org", role = "aut"))
 Maintainer: Petra Kuhnert <Petra.Kuhnert@data61.csiro.au>
-Depends: R (>= 3.3.2), rpart, maps
-Imports: SOAR, abind, grid, geoR, mgcv, grDevices, lattice, foreach, utils,
-    graphics, stats, methods, ggplot2, gridExtra, GGally, reshape, raster,
-    rasterVis, ggmap, maps, mapdata, latticeExtra, maptools, spaMM
+Depends: 
+    R (>= 3.5.0)
+Imports:
+    geoR,
+    ggplot2,
+    graphics,
+    gridExtra,
+    grDevices,
+    GGally,
+    lattice,
+    maps,
+    methods,
+    mgcv,
+    raster,
+    rasterVis,
+    reshape2,
+    rpart,
+    rpart.plot,
+    sp,
+    spaMM
 Description: Performs an analysis of diet and isotope data using univariate trees.
 License: GPL (>= 2)
-LazyLoad: yes
+LazyLoad: TRUE
+LazyData: TRUE
+RoxygenNote: 6.1.0
+Suggests: knitr, rmarkdown
+VignetteBuilder: knitr

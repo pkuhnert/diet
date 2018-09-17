@@ -49,36 +49,37 @@
 #' @keywords read
 #' @examples 
 #' # Reading in a diet matrix
-#' data(yftDMraw)
-#' write.csv(yftDMraw, file = "yftDMraw.csv", row.names = FALSE)
-#' yftpp1 <- read.dm(filenm = "yftDMraw.csv", 
-#'                   labels = list(FullnessL = "Fullness", DateL = "Date"),
-#'                                     Datef = "\%m/\%d/\%Y", diet.ind.start = 12, p = 0.01)
-#' data(PreyTaxonSort)
-#' val <- apc(x = yftpp1, preyfile = PreyTaxonSort, check = TRUE)
-#' node.colsY <- val$cols
-#' dietPP <- val$x   # updated diet matrix with "Group" assigned prey taxa codes
-#' head(dietPP)
+#' #data(yftDMraw)
+#' #write.csv(yftDMraw, file = "yftDMraw.csv", row.names = FALSE)
+#' #yftpp1 <- read.dm(filenm = "yftDMraw.csv", 
+#' #                   labels = list(FullnessL = "Fullness", DateL = "Date"),
+#' #                                     Datef = "\%m/\%d/\%Y", diet.ind.start = 12, p = 0.01)
+#' #data(PreyTaxonSort)
+#' #val <- apc(x = yftpp1, preyfile = PreyTaxonSort, check = TRUE)
+#' #node.colsY <- val$cols
+#' #dietPP <- val$x   # updated diet matrix with "Group" assigned prey taxa codes
+#' #head(dietPP)
 #' 
 #' # Reading in a predator-prey matrix
-#' data(yftPPraw)
-#' write.csv(yftPPraw, file = "yftPPraw.csv", row.names = FALSE)
-#' yftpp2 <- read.pp(filenm = "yftPPraw.csv",
-#'                   labels = list(PredatorL = "TripSetPredNo", TripSetL = "TripSetNo",
-#'                                                   SpeciesL = "Family", FullnessL = "Fullness", 
-#'                                                   DateL = "Date", WeightL = "PropW", PreyGrpL = "Family"), 
-#'                                                   Datef = "\%m/\%d/\%Y", p = 0.01,
-#'                                                   Xvars = c("Lat", "Lon", "Year", "Quarter", "Length", "SST"))
-#' data(PreyTaxonSort)
-#' pal <- c(topo.colors(10)[1:2], heat.colors(10)[1:2], terrain.colors(25)[1:8])
-#' val <- apc(x = yftpp2, preyfile = PreyTaxonSort, palette = pal, check = TRUE)
-#' node.colsY <- val$cols
-#' dietPP <- val$x   # updated diet matrix with prey taxa codes
-#' head(dietPP)
-#' @export
+#' #data(yftPPraw)
+#' #write.csv(yftPPraw, file = "yftPPraw.csv", row.names = FALSE)
+#' #yftpp2 <- read.pp(filenm = "yftPPraw.csv",
+#' #                   labels = list(PredatorL = "TripSetPredNo", TripSetL = "TripSetNo",
+#' #                               SpeciesL = "Family", FullnessL = "Fullness", 
+#' #                                DateL = "Date", WeightL = "PropW", PreyGrpL = "Family"), 
+#' #                                 Datef = "\%m/\%d/\%Y", p = 0.01,
+#' #                               Xvars = c("Lat", "Lon", "Year", "Quarter", "Length", "SST"))
+#' #data(PreyTaxonSort)
+#' #pal <- c(topo.colors(10)[1:2], heat.colors(10)[1:2], terrain.colors(25)[1:8])
+#' #val <- apc(x = yftpp2, preyfile = PreyTaxonSort, palette = pal, check = TRUE)
+#' #node.colsY <- val$cols
+#' #dietPP <- val$x   # updated diet matrix with prey taxa codes
+#' #head(dietPP)
+
 
 
 #' @rdname read
+#' @export
 read.dm <- function (object = NULL, filenm = NULL, labels = list(DateL = "Date", 
                     FullnessL = "Fullness"), Datef = "%d/%m/%Y", diet.ind.start, 
                      p = 0.01, sp2omit = NULL, predsp = NULL) 
@@ -128,6 +129,7 @@ read.dm <- function (object = NULL, filenm = NULL, labels = list(DateL = "Date",
 
 
 #' @rdname read
+#' @export
 read.pp <- function (object = NULL, filenm = NULL, 
                      labels = list(PredatorL = "PredID",TripSetL = "TripSetNo", SpeciesL = "Species", 
                                    FullnessL = "Fullness",DateL = "Date", WeightL = "Weight", 

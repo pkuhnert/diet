@@ -6,19 +6,15 @@
 #' @param object fitted tree object of class \code{dpart}.
 #' @param newdata optional new dataset to base the diversity estimates on. By default, the dataset
 #' used to create the tree is used.
+#' @param too.far too.far
 #' @param LatID column labelling the latitude co-ordinate
 #' @param LonID column labelling the longitude co-ordinate
-#' @param mapxlim x-range for the map. Defaults to the range of the longitude co-ordinate.
-#' @param mapylim y-range for the map. Defaults to the range of the latitude co-ordinate.
-#' @param cex.axis size of points on both axes. Defaults to 0.75.
-#' @param mapcol colour of land masses shown on the map. Defaults to "gold3"
-#' @param plot logical. If true, a map is produced.
-#' @param database one of "world" or "world2" specifying the map co-ordinate system to use. If no
-#' database is given, this will default to "world".
+#' @param projection projection
+#' @param maxpixels maxpixels
+#' @param col col
+#' @param fill fill
+#' @param zlim zlim
 #' 
-#' @usage   \method{diversity}{dpart}(object, newdata = NULL, LatID, LonID,
-#'                             mapxlim = NULL, mapylim = NULL, cex.axis = 0.75,   
-#'                             mapcol = "gold3", plot = TRUE, database = "world")
 #' @details Depending on the extent of the data collected and co-ordinate system required, 
 #' "world2" may produce a better map than "world". 
 #' 
@@ -36,38 +32,41 @@
 #' 
 #' @examples 
 #' # Load data
-#' data(yftdiet)  
+#' #data(yftdiet)  
+#' 
 #' # Load the prey taxa data
-#' data(PreyTaxonSort)
+#' #data(PreyTaxonSort)
+#' 
 #' # Assigning prey colours for default palette
-#' val <- apc(x = yftdiet, preyfile = PreyTaxonSort, check = TRUE)
-#' node.colsY <- val$cols
-#' dietPP <- val$x   # updated diet matrix with Group assigned prey taxa codes
+#' #val <- apc(x = yftdiet, preyfile = PreyTaxonSort, check = TRUE)
+#' #node.colsY <- val$cols
+#' #dietPP <- val$x   # updated diet matrix with Group assigned prey taxa codes
 #' 
 #' # Fitting the classification tree
-#' yft.dp <- dpart(Group ~ Lat + Lon + Year + Quarter + SST  + Length, 
-#'                   data = dietPP, weights = W, minsplit = 10,
-#'                                  cp = 0.001)
-#'                                  yft.pr <- prune(yft.dp, se = 1)
-#'                                  diversity(object = yft.pr, LatID = "Lat", LonID = "Lon", too.far = 0.05,
-#'                                              projection = "+proj=longlat +datum=WGS84", maxpixels = 1e5,
-#'                                                          col = "black", fill = "lightgrey")
+#' #yft.dp <- dpart(Group ~ Lat + Lon + Year + Quarter + SST  + Length, 
+#' #                   data = dietPP, weights = W, minsplit = 10,
+#' #                                  cp = 0.001)
+#' # yft.pr <- prune(yft.dp, se = 1)
+#' # diversity(object = yft.pr, LatID = "Lat", LonID = "Lon", too.far = 0.05,
+#' #          projection = "+proj=longlat +datum=WGS84", maxpixels = 1e5,
+#' #          col = "black", fill = "lightgrey")
 #'                                                          
 #' @export
 
 
 diversity <- function(object, newdata = NULL, too.far = 0.1, LatID, LonID,
                       projection = "+proj=longlat +datum=WGS84", maxpixels = 1e5,
-                      col = "lightgrey", fill = "lightgrey") UseMethod("diversity")
+                      col = "lightgrey", fill = "lightgrey", zlim = c(0,1)) UseMethod("diversity")
 
 
 #' @rdname diversity
+#' @import  spaMM
 diversity.dpart <- function(object, newdata = NULL, too.far = 0.1, LatID, LonID,
                             projection = "+proj=longlat +datum=WGS84", maxpixels = 1e5,
                             col = "lightgrey", fill = "lightgrey", zlim = c(0,1)){
   
   options(warn = -1)
-  data(worldcountries)  # loading from package maps
+ # data(worldcountries)  
   palette <- spaMM.colors()
   
   if(missing(LatID) | missing(LonID))
@@ -98,6 +97,7 @@ diversity.dpart <- function(object, newdata = NULL, too.far = 0.1, LatID, LonID,
   d.cols <- as.factor(d.bks)
   levels(d.cols) <- topo.colors(10)
   pdat <- NULL
+  #pred <- pred.rpart(object, rpart.matrix(newdata))
   pred <- rpart:::pred.rpart(object, rpart.matrix(newdata))
   dd <- with(ff, dev/npredators)[pred]
   pdat <- data.frame(Lat = newdata[,LatID], Lon = newdata[,LonID], D = dd)
@@ -110,7 +110,7 @@ diversity.dpart <- function(object, newdata = NULL, too.far = 0.1, LatID, LonID,
   
   
   # spatial prediction of diversity
-  fit <- gam(D ~ s(Longitude, Latitude), data = pdat)
+  fit <- gam(D ~ s(pdat$Longitude, pdat$Latitude), data = pdat)
   plotfit <- Vis.Gam(fit, too.far = too.far, plot.type = "contour", 
                      add = FALSE, type = "response")
   mat <- plotfit$mat

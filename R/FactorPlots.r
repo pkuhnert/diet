@@ -13,7 +13,7 @@ FactorPlots <- function(x, XvarF, i, PredSpID){
                            rep(levels(x[,PredSpID]), length(tab))))
   names(x.bp) <- c("y", "X", "Predator")
   x.bp$y <- as.numeric(as.vector(x.bp$y))  
-  expl9 <- ggplot(data = x.bp, aes(X, col = PredSpp)) + geom_bar() +
+  expl9 <- ggplot(data = x.bp, aes_string("X", col = "PredSpp")) + geom_bar() +
     xlab(names(XvarF)[i])
   expl9
 }

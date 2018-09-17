@@ -2,7 +2,7 @@
 #' 
 #' @description Analyses diet data using a classification tree analysis with case weights
 #' 
-#' @usage dpart(formula, data, weights, subset, na.action = na.dpart,
+#' @usage dpart(formula, data, weights, subset, na.action = na.rpart,
 #' model = FALSE, x = FALSE, y = TRUE, parms, control, cost, ...)
 #' 
 #' @param formula  a \link{formula}, with a response but no interaction terms as 
@@ -31,12 +31,13 @@
 #' @param cost a vector of non-negative costs, one for each variable in the model. Defaults 
 #' to one for all variables. These are scalings to be applied when considering splits, 
 #' so the improvement on splitting on a variable is divided by its cost in deciding which split to choose.
-#' @param \dots arguments to \code{rpart.control} may also be specified in the call to 
+#' @param ... arguments to \code{rpart.control} may also be specified in the call to 
 #' \code{rpart}. They are checked against the list of valid arguments.
 #'
 #' @details Analyses diet data using a univariate tree analysis with case weights
 #' 
-#' @value an object of class \code{dpart}, a superset of class \code{rpart}.
+#' @return 
+#' an object of class \code{dpart}, a superset of class \code{rpart}.
 #' 
 #' @references 
 #' Breiman, Friedman, Olshen, and Stone. (1984) Classification and Regression Trees. Wadsworth.
@@ -48,28 +49,36 @@
 #' 
 #' @keywords classification, diet, tree
 #' 
+#' @import rpart
+#' 
 #' @examples 
-# Load data
-data(yftdiet)  
-# Load the prey taxa data
-data(PreyTaxonSort)
-  
-# Assigning prey colours for default palette
-val <- apc(x = yftdiet, preyfile = PreyTaxonSort, check = TRUE)
-node.colsY <- val$cols
-dietPP <- val$x   # updated diet matrix with Group assigned prey taxa codes
-  
-# Fitting the classification tree
-yft.dp <- dpart(Group ~ Lat + Lon + Year + Quarter + SST  + Length, 
-                  data = dietPP, weights = W, minsplit = 10,
-                  cp = 0.001)
-plot(yft.dp, node.cols = node.colsY)
-summary(yft.dp)
-print(yft.dp, setID = "TripSetNo")
+#' # Load data
+#' #data(yftdiet)  
+#' 
+#' # Load the prey taxa data
+#' #data(PreyTaxonSort)
+#' 
+#' # Assigning prey colours for default palette
+#' #val <- apc(x = yftdiet, preyfile = PreyTaxonSort, check = TRUE)
+#' #node.colsY <- val$cols
+#' #dietPP <- val$x   # updated diet matrix with Group assigned prey taxa codes
+#' 
+#' # Fitting the classification tree
+#' #yft.dp <- dpart(Group ~ Lat + Lon + Year + Quarter + SST  + Length, 
+#' #                  data = dietPP, weights = W, minsplit = 10,
+#' #                                    cp = 0.001)
+#' #plot(yft.dp, node.cols = node.colsY)
+#' #summary(yft.dp)
+#' #print(yft.dp, setID = "TripSetNo")
+#' 
+#' @importFrom "stats" "model.extract"
+#' @import "rpart"
+#' 
+#' @export
 
 
 
-dpart <- function(formula, data, weights, subset, na.action = na.dpart,
+dpart <- function(formula, data, weights, subset, na.action = na.rpart,
    model = FALSE, x = FALSE, y = TRUE, parms, control, cost,
    ...){
 

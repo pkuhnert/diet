@@ -11,45 +11,46 @@
 #' @param LatID string. Column name of latitude.
 #' @param LonID string. Column name of longitude.
 #' @param setID optional set identification number.
-#' @param node.cols vector of node colours assigned to each prey. Use output from \code{apc} function.
-#' If node colours are not provided, the trees will not be produced in colour.
+#' @param node.cols vector of node colours assigned to each prey. 
+#' Use output from \code{apc} function. If node colours are not provided, 
+#' the trees will not be produced in colour.
 #' @param cex numeric. Size of plotting symbols and labels (default: 0.8)
-#' @param mapxlim optional map x-limits. If none are specified then the range of the data are used.
-#' @param mapylim optional map y-limits. If none are specified then the range of the data are used.
+#' @param mapxlim optional map x-limits. If none are specified then the 
+#' range of the data are used.
+#' @param mapylim optional map y-limits. If none are specified then the 
+#' range of the data are used.
 #' @param mapcol map land colour. (default: gold3)
-#' @param database either 'world' or 'world2' are available for plotting. Defaults to 'world' if
+#' @param database either 'world' or 'world2' are available for plotting. 
+#' Defaults to 'world' if
 #' not specified.
-#' @param onepage logical. If \code{TRUE}, produces all of the plots on a single page. (Set to \code{FALSE}
+#' @param onepage logical. If \code{TRUE}, produces all of the plots on a 
+#' single page. (Set to \code{FALSE}
 #' if you want publication quality plots appearing on each page).
-#' @param display.object tree object to display. This may be different to \code{object} when bagging is used.
-#' @param oob logical. Option when a bagged tree is passed to the \code{grab.bag} function to 
+#' @param display.object tree object to display. This may be different 
+#' to \code{object} when bagging is used.
+#' @param oob logical. Option when a bagged tree is passed to the 
+#' \code{grab.bag} function to 
 #' use out of bag estimates.
-#' @param n numeric. Maximum number of nodes to investigate in the tree. Defaults to the number
-#' in the tree.
-#' @param ylim y-axis limit for barcharts that are produced by the \code{explore} function
+#' @param n numeric. Maximum number of nodes to investigate in the tree. 
+#' Defaults to the number in the tree.
+#' @param ylim y-axis limit for barcharts that are produced by the 
+#' \code{explore} function
 #' @param \dots  arguments to be passed to or from other methods
 #' 
 #' 
-#' @usage 
-#' \method{grab}{dpart}(object, LatID, LonID, setID = NULL, node.cols = NULL, cex = 0.8, 
-#'                        mapxlim = NULL, mapylim = NULL, mapcol = "black", database = 'world', 
-#'                                               onepage = TRUE, ...)
-#'                                               
-#'\method{grab}{bag}(object, LatID, LonID, setID =  NULL, node.cols = NULL, cex = 0.8,
-#'                     mapxlim = NULL, mapylim = NULL, mapcol = "gold3", database = 'world',  
-#'                                        onepage = TRUE, display.object, oob = FALSE, ylim)
-#'                                        
-#'\method{grabmulti}{dpart}(object, LatID, LonID, setID = NULL, node.cols = NULL, cex = 0.8,
-#'                            mapxlim = NULL, mapylim = NULL, mapcol = "black", n = nrow(object$frame), 
-#'                                                        database = 'world', ...)
 #'                                                        
-#' @details The \code{grab.dpart} function can be used on any tree object of class \code{dpart}.
-#'   The \code{grab.bag} function can be used on any tree object of class \code{bag}.
-#'     The \code{grabmulti.dpart} function can only be used on tree objects of class \code{dpart}.
-#'       These functions can be invoked explicitly or just by calling the \code{grab} 
+#' @details The \code{grab.dpart} function can be used on any 
+#' tree object of class \code{dpart}.
+#'   The \code{grab.bag} function can be used on any tree 
+#'   object of class \code{bag}.
+#'     The \code{grabmulti.dpart} function can only be used on 
+#'     tree objects of class \code{dpart}.
+#'       These functions can be invoked explicitly or just by 
+#'       calling the \code{grab} 
 #'         and \code{grabmulti} functions.
 #'         
-#' @return   Summary output from the node/s selected in the tree consisting of the node number,
+#' @return   Summary output from the node/s selected in the tree 
+#' consisting of the node number,
 #' number of observations, number of sets (if the setID was provided), number of
 #' predators, number of prey, deviance, expected loss and predicted class.
 #' 
@@ -60,22 +61,23 @@
 #' 
 #' @examples 
 #' # Load data
-#' data(yftdiet)  
+#' #data(yftdiet)  
+#' 
 #' # Load the prey taxa data
-#' data(PreyTaxonSort)
+#' #data(PreyTaxonSort)
 #' 
 #' # Assigning prey colours for default palette
-#'   val <- apc(x = yftdiet, preyfile = PreyTaxonSort, check = TRUE)
-#'   node.colsY <- val$cols
-#'   dietPP <- val$x   # updated diet matrix with Group assigned prey taxa codes
+#' #   val <- apc(x = yftdiet, preyfile = PreyTaxonSort, check = TRUE)
+#' #   node.colsY <- val$cols
+#' #   dietPP <- val$x   # updated diet matrix with Group assigned prey taxa codes
 #'   
 #'    # Fitting the classification tree
-#'    yft.dp <- dpart(Group ~ Lat + Lon + Year + Quarter + SST  + Length, 
-#'                      data = dietPP, weights = W, minsplit = 10,
-#'                                        cp = 0.001)
+#' #    yft.dp <- dpart(Group ~ Lat + Lon + Year + Quarter + SST  + Length, 
+#' #                      data = dietPP, weights = W, minsplit = 10,
+#' #                                        cp = 0.001)
 #'                                        
 #' # Pruning the tree
-#' yft.pr <- prune(yft.dp, se = 1)                   
+#' #yft.pr <- prune(yft.dp, se = 1)                   
 #' 
 #' # Exploring Nodes: This suite of graphics is interactive and therefore has
 #' # been commented out. When run, the code will ask you to select a node for
@@ -104,6 +106,7 @@ grab <- function(object, LatID, LonID, setID = NULL, node.cols = NULL, cex = 0.8
 
 
 #' @rdname grab
+#' @import grid
 grabmulti.dpart <- function(object, LatID, LonID, setID = NULL, node.cols = NULL, cex = 0.8,
                             mapxlim = NULL, mapylim = NULL, 
                             mapcol = "black", n = nrow(object$frame), database = 'world', ...){
@@ -231,7 +234,6 @@ grab.dpart <- function(object, LatID, LonID, setID = NULL, node.cols = NULL, cex
   nprey <- length(pred.node.m[pred.node.m > 0])
   dev <- subtree$frame$dev[as.integer(pred.where)]
   loss <- subtree$frame$dev[as.integer(pred.where)]/subtree$frame$wt[as.integer(pred.where)]
-  
   pclass <- with(subtree, levels(data$Group)[frame[paste(node),]$yval])
   explore(object = subtree, pred = subpred, pred.where = subpred.where, loss = loss,
           node = pred.where, cols = node.cols, showtitle = FALSE, cex = cex)
@@ -319,7 +321,7 @@ grab.bag <- function(object, LatID, LonID, setID =  NULL, node.cols = NULL, cex 
   # Plot 2: Mapping
   m <- mappoints.data(dat[,c(LonID,LatID)], xlim = mapxlim, ylim = mapylim, 
                       database = database) + geom_point(data = dat.where, 
-                                                        aes(Lon, Lat), pch = 16, size = 2,
+                                                        aes_string("Lon", "Lat"), pch = 16, size = 2,
                                                         col = node.cols[col.id]) +
     ggtitle(paste("Node ", nID, " (n_pred=",
                   subtree$frame$wt[as.integer(pred.where)],")", sep = ""))

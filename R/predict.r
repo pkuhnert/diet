@@ -1,60 +1,68 @@
 #' Predict from a dpart Object
 #' 
-#' @description Forms predictions from an object of class \code{dpart}. Options are to produce predicted
+#' @description Forms predictions from an object of class \code{dpart}. 
+#' Options are to produce predicted
 #' probabilities or predicted classificaitons.
+#' 
 #' 
 #' @param object object of class \code{dpart}
 #' @param newdata optional data set to predict on.
-#' @param type either "prob" or "class" to specify probabilities or classifications.
+#' @param type either "prob" or "class" to specify probabilities or 
+#' classifications.
 #' @param na.action what to do about missing values. (Default is to omit).
-#' @param plot logical. Produce a plot of the predictions if TRUE otherwise just write the predictions
+#' @param node.cols node.cols
+#' @param plot logical. Produce a plot of the predictions if TRUE 
+#' otherwise just write the predictions
 #' out to file.
-#' @param pred.type either "obs" or "predator" to indicate whether predictions are to be generated for
+#' @param pred.type either "obs" or "predator" to indicate whether 
+#' predictions are to be generated for
 #' each observation or each predator, respectively.
-#' @param predatorID predator identification label. Required when \code{pred.type = "predator"}
+#' @param predatorID predator identification label. Required when 
+#' \code{pred.type = "predator"}
 #' @param cex numeric. Size of plotting characters and labels.
 #' @param \dots other arguments to pass into the function
 #' 
-#' @usage 
-#'   \method{predict}{dpart}(object, newdata = list(), type = c("prob", "class"), na.action = na.pass,
-#'                             plot = TRUE, pred.type = "obs", predatorID = NULL, cex = 1.0, ...)
 #'                             
 #'    
-#' @return Predicted probabilities for each observation or each predator, if 
-#' \code{pred.type = "predator"} was specified. Predicted classifications if \code{type = "class"} was specified.
+#' @return Predicted probabilities for each observation or 
+#' each predator, if \code{pred.type = "predator"} was specified. 
+#' Predicted classifications if \code{type = "class"} was specified.
 #' 
-#' @references Kuhnert, P.M., Duffy, L. M and Olson, R.J. (2012) The Analysis of Predator Diet 
-#' and Stable Isotope Data, Journal of Statistical Software, In Prep. 
+#' @references Kuhnert, P.M., Duffy, L. M and Olson, R.J. (2012) The 
+#' Analysis of Predator Diet and Stable Isotope Data, Journal of Statistical 
+#' Software, In Prep. 
 #' 
 #' @examples 
 #' # Load data
-#' data(yftdiet)  
+#' #data(yftdiet)  
 #' # Load the prey taxa data
-#' data(PreyTaxonSort)
+#' #data(PreyTaxonSort)
 #' 
 #' # Assigning prey colours for default palette
-#' val <- apc(x = yftdiet, preyfile = PreyTaxonSort, check = TRUE)
-#' node.colsY <- val$cols
-#' dietPP <- val$x   # updated diet matrix with Group assigned prey taxa codes
+#' #val <- apc(x = yftdiet, preyfile = PreyTaxonSort, check = TRUE)
+#' #node.colsY <- val$cols
+#' #dietPP <- val$x   # updated diet matrix with Group assigned prey 
+#' #taxa codes
 #' 
 #' # Fitting the classification tree
-#' yft.dp <- dpart(Group ~ Lat + Lon + Year + Quarter + SST  + Length,
-#'                   data = dietPP, weights = W, minsplit = 10,
-#'                                     cp = 0.001)
+#' #yft.dp <- dpart(Group ~ Lat + Lon + Year + Quarter + SST  + Length,
+#' #                   data = dietPP, weights = W, minsplit = 10,
+#' #                                     cp = 0.001)
 #'                                     
 #' # Pruning the tree
-#' yft.pr <- prune(yft.dp, se = 1)                   
+#' #yft.pr <- prune(yft.dp, se = 1)                   
 #' 
 #' # Predictions
 #' # predict distribution of prey composition for each predator
-#' yft.predator <- predict(yft.pr, type = "prob", pred.type = "predator",
-#'                           predatorID = "TripSetNo")
+#' #yft.predator <- predict(yft.pr, type = "prob", pred.type = "predator",
+#' #                          predatorID = "TripSetNo")
 #'                           
-#'                           # predict distribution of prey composition for each observation
-#'                           yft.pred.obs <- predict(yft.pr, type = "prob")
+#' # predict distribution of prey composition for each observation
+#' #yft.pred.obs <- predict(yft.pr, type = "prob")
 #'                           
-#'                           # predict classification  for each observation in the dataset
-#'                           yft.predC <- predict(yft.pr, type = "class")   # predicted classification
+#' # predict classification  for each observation in the dataset
+#' #yft.predC <- predict(yft.pr, type = "class")   # predicted 
+#' #classification
 #'                           
 #' @export
 
@@ -65,7 +73,8 @@ predict <- function(object, ...){
 }
 
 #' @rdname predict
-predict.dpart <- function(object, newdata = list(), type = c("prob", "class"), na.action = na.pass,
+predict.dpart <- function(object, newdata = list(), type = c("prob", "class"), 
+                          na.action = na.pass, node.cols = NULL,
            plot = TRUE, pred.type = "obs", predatorID = NULL, cex = 1.0, ...){
     
     if(plot)
@@ -94,6 +103,7 @@ predict.dpart <- function(object, newdata = list(), type = c("prob", "class"), n
       }
       else
         ID <- newdata[,paste(predatorID)]
+      #where <- pred.rpart(object, rpart.matrix(newdata))
       where <- rpart:::pred.rpart(object, rpart.matrix(newdata))
       
     }
@@ -102,14 +112,16 @@ predict.dpart <- function(object, newdata = list(), type = c("prob", "class"), n
     method <- object$method
     ylevels <- attr(object, "ylevels")
     nclass <- length(ylevels)
+
     
+ 
     if (type == "class" && nclass > 0) {
       pred <- factor(ylevels[frame$yval[where]], levels = ylevels)
       names(pred) <- names(where)
       tpred <- table(pred)/sum(table(pred))
       if(plot){
         
-        if(dev.cur() == 1) windows(8,8, record = TRUE)
+      #  if(dev.cur() == 1) windows(8,8, record = TRUE)
         par.old <- par()$mar
         par(mfrow=c(1,1), mar = c(8, 4, 4, 2) + 0.1)
         b <- barplot(tpred, names = "",
@@ -122,12 +134,19 @@ predict.dpart <- function(object, newdata = list(), type = c("prob", "class"), n
       pred <- frame$yval2[where, 1L + nclass + 1L:nclass, drop = FALSE]
       dimnames(pred) <- list(names(where), ylevels)
       if(plot){
-        if(dev.cur() == 1) windows(8,8, record = TRUE)
+     #   if(dev.cur() == 1) windows(8,8, record = TRUE)
         par(mfrow=c(2,2))
-        for(i in names(table(where)))
-          explore(object = object, pred=pred, pred.where=where,
-                  node=i, showtitle = TRUE, cex = cex)
+        for(i in names(table(where))){
+ 
+          loss <- object$frame$dev[as.integer(i)]/object$frame$wt[as.integer(i)]
+          explore(object = object, pred=pred, loss = loss, pred.where=where,
+                  node=i, showtitle = TRUE, cex = cex, cols = node.cols)
+        }
+          
         par(mfrow=c(1,1))
+        
+        
+        
       }
     }
     
