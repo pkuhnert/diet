@@ -1676,7 +1676,7 @@ SmPlots <- function(x, i, SmXvar, SmXdat, LonID, LatID, projection, palette, too
   names(tmpdat) <- c("y", "Longitude", "Latitude")
   
   #tmpdat <- data.frame(y = SmXdat[,i], Longitude = x[,LonID], Latitude = x[,LatID])
-  res <- gam(y ~ s(tmpdat$Longitude, tmpdat$Latitude), data = tmpdat)
+  res <- gam(y ~ s(Longitude, Latitude), data = tmpdat)
 
  # data(worldcountries)
   plotfit <- Vis.Gam(res, too.far = too.far, plot.type = "contour", add = FALSE)
