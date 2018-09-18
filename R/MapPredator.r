@@ -1,6 +1,8 @@
 #' MapPredator
 #' 
-#' @import "ggplot2"
+#' @importFrom "ggplot2" "ggplot" "ggplot_gtable" "aes_string" "geom_point" "geom_bar"
+#' @importFrom "ggplot2" "geom_histogram"
+
 MapPredator <- function(x, LonID, LatID, mapxlim, mapylim, database, PredSpID){
   
   expl2 <- mappoints.data(x[,c(LonID,LatID)], xlim = mapxlim, ylim = mapylim,  

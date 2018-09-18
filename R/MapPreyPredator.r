@@ -1,6 +1,8 @@
 #' MapPreyPredator
 #' 
-#' @import "ggplot2"
+#' @importFrom "ggplot2" "ggplot" "ggplot_gtable" "aes_string" "geom_point" "geom_bar"
+#' @importFrom "ggplot2" "geom_histogram"
+
 MapPreyPredator <- function(x, PredSpID, LonID, LatID, mapxlim, mapylim,
                 database){
   

@@ -64,7 +64,8 @@
 #' 
 #' @keywords  exploratory
 #' 
-#' @import "ggplot2"
+#' @importFrom "ggplot2" "ggplot" "ggplot_gtable" "aes_string" "geom_point" "geom_bar"
+#' @importFrom "ggplot2" "geom_histogram"
 #' @importFrom  "spaMM" "spaMM.colors"
 #' @importFrom "mgcv" "gam"
 #' @import "raster"
@@ -92,7 +93,8 @@
 #' #  names(explore.diet)
 #' # explore.diet$dataS2
 #'  
-#' @import "ggplot2"                                               
+#' @importFrom "ggplot2" "ggplot" "ggplot_gtable" "aes_string" "geom_point" "geom_bar"
+#' @importFrom "ggplot2" "geom_histogram"
 #' @importFrom "grDevices" "pdf" "dev.off"
 #' @importFrom "GGally" "ggpairs"
 #' @importFrom "stats" "cor"

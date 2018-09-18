@@ -63,7 +63,8 @@ apc <- function(x, preyfile, palette = NULL, check = FALSE)
   UseMethod("apc")
 
 #' @rdname apc
-#' @import "ggplot2" 
+#' @importFrom "ggplot2" "ggplot" "ggplot_gtable" "aes_string" "geom_point" "geom_bar"
+#' @importFrom "ggplot2" "geom_histogram"
 #' @importFrom "utils" "read.csv"
 #' @importFrom "grDevices" "colorRampPalette" "topo.colors"
 #' @importFrom "methods" "Quote"

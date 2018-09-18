@@ -34,6 +34,9 @@
 #' #title(main = "YFT Data Distribution")
 #' 
 #' @import "maps"
+#' @importFrom "ggplot2" "ggplot" "ggplot_gtable" "aes_string" "geom_point" "geom_bar"
+#' @importFrom "ggplot2" "geom_histogram"
+
 #' 
 #' @export
 mappoints <- function(XY.data, xlim, ylim, database = 'world', gtitle = NULL)

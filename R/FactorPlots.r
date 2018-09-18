@@ -1,3 +1,7 @@
+#' FactorPlots
+#' 
+#' @importFrom "ggplot2" "ggplot" "ggplot_gtable" "aes_string" "geom_point" "geom_bar"
+#' @importFrom "ggplot2" "geom_histogram"
 FactorPlots <- function(x, XvarF, i, PredSpID){
   
   levels(XvarF[,i])[levels(XvarF[,i]) == ""] <- NA
