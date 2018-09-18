@@ -6,6 +6,19 @@
 \usage{
 MapPrey(x, LonID, LatID, mapxlim, mapylim, database)
 }
+\arguments{
+\item{x}{x}
+
+\item{LonID}{LonID}
+
+\item{LatID}{LatID}
+
+\item{mapxlim}{mapxlim}
+
+\item{mapylim}{mapylim}
+
+\item{database}{database}
+}
 \description{
-MapPrey
+Internal function used by \code{plot.diet}
 }

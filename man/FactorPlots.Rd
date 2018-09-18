@@ -6,6 +6,15 @@
 \usage{
 FactorPlots(x, XvarF, i, PredSpID)
 }
+\arguments{
+\item{x}{x}
+
+\item{XvarF}{XvarF}
+
+\item{i}{i}
+
+\item{PredSpID}{PredSpID}
+}
 \description{
-FactorPlots
+Internal function used by \code{plot.diet}
 }

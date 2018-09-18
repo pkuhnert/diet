@@ -6,6 +6,21 @@
 \usage{
 MapPredator(x, LonID, LatID, mapxlim, mapylim, database, PredSpID)
 }
+\arguments{
+\item{x}{x}
+
+\item{LonID}{LonID}
+
+\item{LatID}{LatID}
+
+\item{mapxlim}{mapxlim}
+
+\item{mapylim}{mapylim}
+
+\item{database}{database}
+
+\item{PredSpID}{PredSpID}
+}
 \description{
-MapPredator
+Internal function used by \code{plot.diet}
 }

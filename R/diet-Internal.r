@@ -5,7 +5,7 @@
 #' 
 #' @keywords internal
 #' 
-#' @import ggplot2
+#' @import "ggplot2" 
 #' 
 
 #' @rdname diet-Internal

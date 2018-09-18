@@ -60,24 +60,18 @@
 #' @seealso   \code{\link{plot.dpart}}; \code{\link{bagging}}
 #' 
 #' @examples 
-#' # Load data
-#' #data(yftdiet)  
-#' 
-#' # Load the prey taxa data
-#' #data(PreyTaxonSort)
-#' 
 #' # Assigning prey colours for default palette
-#' #   val <- apc(x = yftdiet, preyfile = PreyTaxonSort, check = TRUE)
-#' #   node.colsY <- val$cols
-#' #   dietPP <- val$x   # updated diet matrix with Group assigned prey taxa codes
+#'   val <- apc(x = yftdiet, preyfile = PreyTaxonSort, check = TRUE)
+#'   node.colsY <- val$cols
+#'   dietPP <- val$x   # updated diet matrix with Group assigned prey taxa codes
 #'   
-#'    # Fitting the classification tree
-#' #    yft.dp <- dpart(Group ~ Lat + Lon + Year + Quarter + SST  + Length, 
-#' #                      data = dietPP, weights = W, minsplit = 10,
-#' #                                        cp = 0.001)
+#' # Fitting the classification tree
+#'   yft.dp <- dpart(Group ~ Lat + Lon + Year + Quarter + SST  + Length, 
+#'                       data = dietPP, weights = W, minsplit = 10,
+#'                                         cp = 0.001)
 #'                                        
 #' # Pruning the tree
-#' #yft.pr <- prune(yft.dp, se = 1)                   
+#' yft.pr <- prune(yft.dp, se = 1)                   
 #' 
 #' # Exploring Nodes: This suite of graphics is interactive and therefore has
 #' # been commented out. When run, the code will ask you to select a node for
@@ -98,8 +92,6 @@
 #'            node.cols = node.colsY, cex = 0.8, mapxlim = c(-125, -75), mapylim = c(0, 30))
 #' }
 #' @export
-  
-
 grab <- function(object, LatID, LonID, setID = NULL, node.cols = NULL, cex = 0.8, 
                  mapxlim = NULL, mapylim = NULL, mapcol = "gold3", database = 'world', 
                  onepage = TRUE, display.object, oob = FALSE, ylim) UseMethod("grab")
@@ -107,6 +99,7 @@ grab <- function(object, LatID, LonID, setID = NULL, node.cols = NULL, cex = 0.8
 
 #' @rdname grab
 #' @import grid
+#' @export
 grabmulti.dpart <- function(object, LatID, LonID, setID = NULL, node.cols = NULL, cex = 0.8,
                             mapxlim = NULL, mapylim = NULL, 
                             mapcol = "black", n = nrow(object$frame), database = 'world', ...){
@@ -153,11 +146,13 @@ grabmulti.dpart <- function(object, LatID, LonID, setID = NULL, node.cols = NULL
 }
 
 #' @rdname grab
+#' @export
 grabmulti <-function(object, LatID, LonID, setID = NULL, node.cols = NULL, cex = 0.8,
                      mapxlim = NULL, mapylim = NULL, mapcol = "gold3", n = nrow(object$frame), 
                      database = 'world', ...) UseMethod("grabmulti")
 
 #' @rdname grab
+#' @export
 grab.dpart <- function(object, LatID, LonID, setID = NULL, node.cols = NULL, cex = 0.8, 
                        mapxlim = NULL, mapylim = NULL, mapcol = "black", database = 'world', onepage = TRUE, ...){  
   
@@ -253,6 +248,7 @@ grab.dpart <- function(object, LatID, LonID, setID = NULL, node.cols = NULL, cex
 }
 
 #' @rdname grab
+#' @export
 grab.bag <- function(object, LatID, LonID, setID =  NULL, node.cols = NULL, cex = 0.8,
                      mapxlim = NULL, mapylim = NULL, mapcol = "gold3", database = 'world',  
                      onepage = TRUE, display.object, oob = FALSE, ylim){

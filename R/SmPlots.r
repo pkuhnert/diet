@@ -1,5 +1,17 @@
 #' Smooth Plots
 #' 
+#' @description Smooth plots used in \code{plot.diet}
+#' 
+#' @param x x
+#' @param i i
+#' @param SmXvar SmXvar
+#' @param SmXdat SmXdat
+#' @param LonID LonID
+#' @param LatID LatID
+#' @param projection projection
+#' @param palette palette
+#' @param too.far too.far
+#' 
 #' @importFrom "mgcv" "gam"
 #' @import "sp"
 #' @import "spaMM" 

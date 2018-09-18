@@ -70,7 +70,7 @@
 #' @importFrom "GGally" "ggpairs"
 #' @importFrom "stats" "cor"
 #' @importFrom "reshape2" "melt"
-#' @import "mgcv" 
+#' @importFrom "mgcv" "gam" "summary.gam" 
 #' @import "rpart.plot"
 #' @import "graphics"
 #' @importFrom "raster" "raster"

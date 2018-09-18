@@ -1,0 +1,79 @@
+---
+title: "Running an Analysis using the diet package"
+author: "Petra Kuhnert and Leanne Duffy"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Running an Analysis using the `diet` package}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+The diet package allows you to perform an analysis of diet data. The analyses comprise a mixture of exploratory plots of the data in addition to a classification tree analysis that
+allows you to predict the diet composition and understand what environmental and spatial variables might be influencing the predictions. The methods rely on the \code{rpart} package, well known for classification tree analysis.
+
+
+
+## Data
+
+Two datasets are included in the package. <More here>
+
+```{r, echo=TRUE, fig.align = "center", fig.width=4, fig.height=4, message = FALSE}
+library(diet)
+
+# Option 1: Reading in a diet matrix.
+
+write.csv(yftDMraw, file = "yftDMraw.csv", row.names = FALSE)
+yftpp1 <- read.dm(filenm = "yftDMraw.csv",
+                  labels = list(FullnessL = "Fullness", DateL = "Date"),
+                  Datef = "%m/%d/%Y", diet.ind.start = 12, p = 0.01)
+val <- apc(x = yftpp1, preyfile = PreyTaxonSort, check = TRUE)
+node.colsY <- val$cols
+dietPP <- val$x   # updated diet matrix with "Group" assigned prey taxa codes
+head(dietPP)
+
+# Option 2: Reading in a predator-prey matrix
+write.csv(yftPPraw, file = "yftPPraw.csv", row.names = FALSE)
+yftpp2 <- read.pp(filenm = "yftPPraw.csv",
+                  labels = list(PredatorL = "TripSetPredNo", TripSetL = "TripSetNo",
+                                SpeciesL = "Family", FullnessL = "Fullness",
+                                DateL = "Date", WeightL = "PropW", PreyGrpL = "Family"),
+                  Datef = "%m/%d/%Y", p = 0.01,
+                  Xvars = c("Lat", "Lon", "Year", "Quarter", "Length", "SST"))
+pal <- c(topo.colors(10)[1:2], heat.colors(10)[1:2], terrain.colors(25)[1:8])
+val <- apc(x = yftpp2, preyfile = PreyTaxonSort, palette = pal, check = TRUE)
+node.colsY <- val$cols
+dietPP <- val$x   # updated diet matrix with prey taxa codes
+head(dietPP)
+
+# Create a predator column
+dietPP$Predator <- as.factor(rep("YFT", nrow(dietPP)))
+head(dietPP)
+
+head(yftDMraw)
+```
+
+
+## Exploring diet data
+
+Stuff here
+
+```{r, echo = TRUE, fig.align = "center", fig.width=4, fig.height=4, message = FALSE}
+explore.diet <- plot(x = dietPP, LonID = "Lon", LatID = "Lat", 
+                     Xvar = c("Quarter", "Year", "SST", "Length", "Lat", "Lon"),  
+                     PredSpID = "Predator", mapxlim = c(-125, -75), mapylim = c(0, 30),
+                     SmXvar = c("SST", "Length"), PredIDno = "TripSetPredNo", col = "gold3",
+                     Factor = "Predator", prey.cols = node.colsY)
+```
+
+
+
+## Building a model using the diet package
+
+Stuff here
+
+## Interpreting the results
+
+Stuff here
+
+## References

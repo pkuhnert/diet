@@ -18,25 +18,29 @@ print(x, ...)
 
 \item{...}{arguments to be passed to or from other methods.}
 
-\item{setID}{the set identification number used to summarise the output. Defaults to NULL.}
+\item{setID}{the set identification number used to summarise the output. 
+Defaults to NULL.}
 
 \item{digits}{the number of digits of numbers to print}
 
-\item{file}{file name where to output summary results. (Output too big to print to screen).}
-
-\item{details}{This function is a method for the generic function \code{print} for class "dpart". 
-It can be invoked by calling print for an object of the appropriate class, or
-directly by calling print.dpart. The loss is computed as the deviance at a node divided by the 
-number of predators appearing at a node and ranges between 0 and 1. The loss is a measure of the 
-diversity of prey eaten by predators at the node, where values near 0 indicate
-low diversity and values near 1 indicate high diversity.}
+\item{file}{file name where to output summary results. (Output too big to 
+print to screen).}
 }
 \description{
 Either prints a \code{dpart} object or prints output from a node
 selected from a \code{rpart} tree.
 }
 \details{
-\code{print.dpart} Summary of the tree is provided as a csv file with the following column headings:
+This function is a method for the generic function \code{print} 
+for class "dpart". It can be invoked by calling print for an object of the 
+appropriate class, or directly by calling print.dpart. The loss is computed 
+as the deviance at a node divided by the number of predators appearing at a 
+node and ranges between 0 and 1. The loss is a measure of the 
+diversity of prey eaten by predators at the node, where values near 0 indicate
+low diversity and values near 1 indicate high diversity.
+
+\code{print.dpart} Summary of the tree is provided as a csv file with the 
+following column headings:
 \itemize{
 \item{node}{node number}
 \item{nobs}{number of observations in each node}
@@ -58,42 +62,34 @@ The output is printed to a .csv file
 \examples{
 
 # Example 1: Printing output from dpart
-# Load data
-#data(yftdiet)  
-# Load the prey taxa data
-#data(PreyTaxonSort)
 
 # Assigning prey colours for default palette
-#val <- apc(x = yftdiet, preyfile = PreyTaxonSort, check = TRUE)
-#node.colsY <- val$cols
-#dietPP <- val$x   # updated diet matrix with Group assigned prey taxa codes
+val <- apc(x = yftdiet, preyfile = PreyTaxonSort, check = TRUE)
+node.colsY <- val$cols
+dietPP <- val$x   # updated diet matrix with Group assigned prey taxa codes
 
 # Fitting the classification tree
-#yft.dp <- dpart(Group ~ Lat + Lon + Year + Quarter + SST  + Length, 
-#                   data = dietPP, weights = W, minsplit = 10,
-#                                     cp = 0.001)
-# plot(yft.dp, node.cols = node.colsY)
-# summary(yft.dp)
-# print(yft.dp, setID = "TripSetNo")
+yft.dp <- dpart(Group ~ Lat + Lon + Year + Quarter + SST  + Length, 
+                   data = dietPP, weights = W, minsplit = 10,
+                                     cp = 0.001)
+ plot(yft.dp, node.cols = node.colsY)
+ summary(yft.dp)
+ print(yft.dp, setID = "TripSetNo")
                                     
 # Example 2: Printing nodes from the tree
-# Load data
-#data(yftdiet)  
-# Load the prey taxa data
-#data(PreyTaxonSort)
 
 # Assigning prey colours for default palette
-#val <- apc(x = yftdiet, preyfile = PreyTaxonSort, check = TRUE)
-#node.colsY <- val$cols
-#dietPP <- val$x   # updated diet matrix with Group assigned prey taxa codes
+val <- apc(x = yftdiet, preyfile = PreyTaxonSort, check = TRUE)
+node.colsY <- val$cols
+dietPP <- val$x   # updated diet matrix with Group assigned prey taxa codes
 
 # Fitting the classification tree
-#yft.dp <- dpart(Group ~ Lat + Lon + Year + Quarter + SST  + Length, 
-#                 data = dietPP, weights = W, minsplit = 10,
-#                                 cp = 0.001)
+yft.dp <- dpart(Group ~ Lat + Lon + Year + Quarter + SST  + Length, 
+                 data = dietPP, weights = W, minsplit = 10,
+                                 cp = 0.001)
                                  
 # Pruning the tree
-#yft.pr <- prune(yft.dp, se = 1)                   
+yft.pr <- prune(yft.dp, se = 1)                   
 # Exploring Nodes: This suite of graphics is interactive and therefore will not be run. 
 # When run, the code will ask you to select a node for
 # viewing.
@@ -101,8 +97,8 @@ The output is printed to a .csv file
 # Exploring nodes of the tree - single page
 \dontrun{
 val <- grab(object = yft.pr, LatID = "Lat", LonID = "Lon", setID = "TripSetNo", 
-#            node.cols = node.colsY, cex = 1, mapxlim = c(-125, -75), mapylim = c(0, 30),
-#            mapcol = "gold3", pos = "topleft")
-# val
+            node.cols = node.colsY, cex = 1, mapxlim = c(-125, -75), mapylim = c(0, 30),
+            mapcol = "gold3", pos = "topleft")
+ val
 }
 }

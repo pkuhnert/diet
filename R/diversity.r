@@ -61,7 +61,6 @@ diversity.dpart <- function(object, newdata = NULL, too.far = 0.1, LatID, LonID,
                             col = "lightgrey", fill = "lightgrey", zlim = c(0,1)){
   
   options(warn = -1)
- # data(worldcountries)  
   palette <- spaMM.colors()
   
   if(missing(LatID) | missing(LonID))

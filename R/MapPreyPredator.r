@@ -1,5 +1,15 @@
 #' MapPreyPredator
 #' 
+#' @description Internal function used in \code{plot.diet}
+#' 
+#' @param x x
+#' @param PredSpID PredSpID
+#' @param LonID LonID
+#' @param LatID LatID
+#' @param mapxlim mapxlim
+#' @param mapylim mapylim
+#' @param database database
+#' 
 #' @importFrom "ggplot2" "ggplot" "ggplot_gtable" "aes_string" "geom_point" "geom_bar"
 #' @importFrom "ggplot2" "geom_histogram"
 

@@ -48,8 +48,5 @@ yftPPraw
  
  IATTC, 2004. Annual Report of the Inter-American Tropical Tuna Commission, 2003. Inter-American
  Tropical Tuna Commission, pp. 98.
- 
- @example
- data(yftPPraw)
 }
 \keyword{datasets}

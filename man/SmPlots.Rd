@@ -7,6 +7,25 @@
 SmPlots(x, i, SmXvar, SmXdat, LonID, LatID, projection, palette,
   too.far = 0.05)
 }
+\arguments{
+\item{x}{x}
+
+\item{i}{i}
+
+\item{SmXvar}{SmXvar}
+
+\item{SmXdat}{SmXdat}
+
+\item{LonID}{LonID}
+
+\item{LatID}{LatID}
+
+\item{projection}{projection}
+
+\item{palette}{palette}
+
+\item{too.far}{too.far}
+}
 \description{
-Smooth Plots
+Smooth plots used in \code{plot.diet}
 }
