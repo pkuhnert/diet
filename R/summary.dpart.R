@@ -2,6 +2,11 @@
 #' 
 #' @description Outputs a detailed listing of the classification tree to file: tree_output.txt 
 #' 
+#' \usage{
+#' \method{summary}{dpart}(object, cp = 0, digits = getOption("digits"), 
+#'                         file = "tree_output.txt", ...)
+#'                         }
+#' 
 #' @param object dpart object
 #' @param cp trim nodes with a complexity of less than cp from the listing.
 #' @param digits Number of significant digits to be used in the result.
@@ -38,6 +43,7 @@ summary <- function(object, ...)
   UseMethod("summary")
 
 #' @rdname summary
+#' @export
 summary.dpart <- function(object, cp = 0, digits = getOption("digits"), file = "tree_output.txt", ...){
 
 #' @rdname summary

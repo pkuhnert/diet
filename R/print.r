@@ -86,8 +86,7 @@
 #' #            mapcol = "gold3", pos = "topleft")
 #' # val
 #' }
-
-
+#' @export
 print <- function(x, ...){
   UseMethod("print")
   
@@ -96,6 +95,7 @@ print <- function(x, ...){
 
 #' @rdname print
 #' @importFrom "utils" "write.csv"
+#' @export
 print.dpart <- function(x, setID = NULL, digits=getOption("digits"), file = "diet_tree_summary.csv", ...){
   
   object <- x
