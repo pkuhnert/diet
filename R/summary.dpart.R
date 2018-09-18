@@ -19,7 +19,6 @@
 #' @seealso   \code{\link{summary}}, \code{\link{dpart}}, \code{\link{print.dpart}} 
 #' 
 #' @examples 
-#' @export
 #' 
 #' # Assigning prey colours for default palette
 #' val <- apc(x = yftdiet, preyfile = PreyTaxonSort, check = TRUE)

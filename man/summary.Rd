@@ -27,12 +27,7 @@ summary(object, ...)
 Default file name is \code{tree_output.txt}.}
 }
 \description{
-Outputs a detailed listing of the classification tree to file: tree_output.txt 
-
-\usage{
-\method{summary}{dpart}(object, cp = 0, digits = getOption("digits"), 
-                        file = "tree_output.txt", ...)
-                        }
+Outputs a detailed listing of the classification tree to file: tree_output.txt
 }
 \details{
 This function is a method for the generic function summary for class \code{dpart}. 
