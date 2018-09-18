@@ -1697,7 +1697,7 @@ SmPlots <- function(x, i, SmXvar, SmXdat, LonID, LatID, projection, palette, too
   
   # country layer
   country.layer <- layer(
-    sp.polygons(worldcountries, fill=fill, col = col),
+    sp.polygons(worldcountries, fill="darkgray", col = "lightgray"),
     data=list(sp.polygons=sp.polygons, worldcountries=worldcountries, 
               fill="darkgray", col = "lightgray") 
   )
