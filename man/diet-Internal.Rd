@@ -30,7 +30,6 @@
 \alias{explore.bag}
 \alias{explore}
 \alias{writepn.csv}
-\alias{SmPlots}
 \alias{Distance}
 \title{Internal functions used in the diet package}
 \usage{
@@ -69,10 +68,11 @@ textG.dpart(x, splits = TRUE, which = 4, label = "yval",
   bars = TRUE, xadj = 1, yadj = 1, bord = FALSE,
   node.cols = NULL, pos = NULL, ...)
 
-text.dpart(x, splits = TRUE, which = 4, label = "yval", FUN = text,
-  all.leaves = FALSE, pretty = NULL, digits = getOption("digits") -
-  2, tadj = 0.65, use.n = FALSE, bars = TRUE, xadj = 1, yadj = 1,
-  bord = FALSE, node.cols = NULL, pos = NULL, ...)
+\method{text}{dpart}(x, splits = TRUE, which = 4, label = "yval",
+  FUN = text, all.leaves = FALSE, pretty = NULL,
+  digits = getOption("digits") - 2, tadj = 0.65, use.n = FALSE,
+  bars = TRUE, xadj = 1, yadj = 1, bord = FALSE,
+  node.cols = NULL, pos = NULL, ...)
 
 tree.depth(nodes)
 
@@ -110,9 +110,6 @@ explore(object, pred, pred.where, loss = NULL, node, cols = NULL,
   showtitle = FALSE, labels = TRUE, cex = 1, ylim)
 
 writepn.csv(x)
-
-SmPlots(x, i, SmXvar, SmXdat, LonID, LatID, projection, palette,
-  too.far = 0.05)
 
 Distance(O, P, type = "Hellinger")
 }

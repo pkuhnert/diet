@@ -85,24 +85,20 @@ predictions.
 (5) Summary statistics of the x-variables provided.
 }
 \examples{
-# Load Data
-#data(yftdiet)
-
-# Load PreyTaxonSort file
-#data(PreyTaxonSort)
 
 # Assigning prey colours for default palette
-#val <- apc(x = yftdiet, preyfile = PreyTaxonSort, check = TRUE)
-#node.colsY <- val$cols
-#dietPP <- val$x   # updated diet matrix with Group assigned prey taxa codes
-#explore.diet <- plot(x = dietPP, LonID = "Lon", LatID = "Lat", 
-#                        Xvar = c("Quarter", "Year", "SST", "Length", "Lat", "Lon"),  
-#                         PredSpID = "PredSpp", mapxlim = c(-125, -75), mapylim = c(0, 30),
-#                         SmXvar = c("SST", "Length"), PredIDno = "TripSetPredNo", col = "gold3",
-#                         Factor = "PredSpp", prey.cols = node.colsY)
-#  names(explore.diet)
-# explore.diet$dataS2
+val <- apc(x = yftdiet, preyfile = PreyTaxonSort, check = TRUE)
+node.colsY <- val$cols
+dietPP <- val$x   # updated diet matrix with Group assigned prey taxa codes
+explore.diet <- plot(x = dietPP, LonID = "Lon", LatID = "Lat", 
+                        Xvar = c("Quarter", "Year", "SST", "Length", "Lat", "Lon"),  
+                         PredSpID = "PredSpp", mapxlim = c(-125, -75), mapylim = c(0, 30),
+                         SmXvar = c("SST", "Length"), PredIDno = "TripSetPredNo", col = "gold3",
+                         Factor = "PredSpp", prey.cols = node.colsY)
+  names(explore.diet)
+ explore.diet$dataS2
  
+                                                 
 }
 \references{
 Kuhnert, P.M., Duffy, L. M and Olson, R.J. (2012) The Analysis of Predator Diet 

@@ -66,45 +66,32 @@
 #' 
 #' @importFrom "ggplot2" "ggplot" "ggplot_gtable" "aes_string" "geom_point" "geom_bar"
 #' @importFrom "ggplot2" "geom_histogram"
-#' @importFrom  "spaMM" "spaMM.colors"
-#' @importFrom "mgcv" "gam"
-#' @import "raster"
-#' @import "rasterVis"
-#' @import "lattice"
-#' @importFrom "reshape2" "melt"
-#' @import "gridExtra"
-#' 
-#' @examples 
-#' # Load Data
-#' #data(yftdiet)
-#' 
-#' # Load PreyTaxonSort file
-#' #data(PreyTaxonSort)
-#' 
-#' # Assigning prey colours for default palette
-#' #val <- apc(x = yftdiet, preyfile = PreyTaxonSort, check = TRUE)
-#' #node.colsY <- val$cols
-#' #dietPP <- val$x   # updated diet matrix with Group assigned prey taxa codes
-#' #explore.diet <- plot(x = dietPP, LonID = "Lon", LatID = "Lat", 
-#' #                        Xvar = c("Quarter", "Year", "SST", "Length", "Lat", "Lon"),  
-#' #                         PredSpID = "PredSpp", mapxlim = c(-125, -75), mapylim = c(0, 30),
-#' #                         SmXvar = c("SST", "Length"), PredIDno = "TripSetPredNo", col = "gold3",
-#' #                         Factor = "PredSpp", prey.cols = node.colsY)
-#' #  names(explore.diet)
-#' # explore.diet$dataS2
-#'  
-#' @importFrom "ggplot2" "ggplot" "ggplot_gtable" "aes_string" "geom_point" "geom_bar"
-#' @importFrom "ggplot2" "geom_histogram"
 #' @importFrom "grDevices" "pdf" "dev.off"
 #' @importFrom "GGally" "ggpairs"
 #' @importFrom "stats" "cor"
 #' @importFrom "reshape2" "melt"
+#' @import "mgcv" 
 #' @import "rpart.plot"
 #' @import "graphics"
-#' @import "raster"
+#' @importFrom "raster" "raster"
 #' @import "rasterVis"
 #' @import "lattice"
 #' @import "latticeExtra"
+#' 
+#' @examples 
+#' 
+#' # Assigning prey colours for default palette
+#' val <- apc(x = yftdiet, preyfile = PreyTaxonSort, check = TRUE)
+#' node.colsY <- val$cols
+#' dietPP <- val$x   # updated diet matrix with Group assigned prey taxa codes
+#' explore.diet <- plot(x = dietPP, LonID = "Lon", LatID = "Lat", 
+#'                         Xvar = c("Quarter", "Year", "SST", "Length", "Lat", "Lon"),  
+#'                          PredSpID = "PredSpp", mapxlim = c(-125, -75), mapylim = c(0, 30),
+#'                          SmXvar = c("SST", "Length"), PredIDno = "TripSetPredNo", col = "gold3",
+#'                          Factor = "PredSpp", prey.cols = node.colsY)
+#'   names(explore.diet)
+#'  explore.diet$dataS2
+#'  
 #'                                                  
 #' @export
 plot.diet <- function(x, y = NULL, Xvar, LonID, LatID, mapxlim, mapylim, PredSpID = NULL, SmXvar = NULL,
@@ -279,20 +266,20 @@ plot.diet <- function(x, y = NULL, Xvar, LonID, LatID, mapxlim, mapylim, PredSpI
     
   }
 
-  
+
   if(!is.null(filenm)){
     dev.off()
     cat(paste("Plots written to file ", filenm, "\n", sep = ""))
     
   } # Summary Statistics
   sum.x <- summary(x)
-  
+ 
   
   sum.x2 <- data.frame(nobs = nrow(x), npred = ifelse(is.null(PredIDno), NA, length(unique(x[,PredIDno]))),
                        nprey = length(levels(x$Group)))
-  
 
-  list(SmGAMOutput = lapply(res,summary), dataS1 = sum.x, dataS2 = sum.x2,
+
+  list(SmGAMOutput = lapply(res,summary.gam), dataS1 = sum.x, dataS2 = sum.x2,
        expl1 = expl1, expl3 = expl3, expl4= expl4, expl5 = expl5,
        expl6 = expl6, expl7 = expl7, expl8 = expl8, expl9 = expl9, expl10 = expl10,
        plotSpComp = plotSpComp, smplot = smplot)
