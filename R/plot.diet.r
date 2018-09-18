@@ -258,6 +258,7 @@ plot.diet <- function(x, y = NULL, Xvar, LonID, LatID, mapxlim, mapylim, PredSpI
       palette <- spaMM.colors()
       projection <- "+proj=longlat +datum=WGS84"
      for(i in 1:ncol(SmXdat)){
+ 
        val <- SmPlots(x, i, SmXvar, SmXdat, LonID, LatID, projection, palette, too.far = 0.05)
        res[[i]] <- val$res
        smplot[[i]] <- val$smplot
@@ -270,7 +271,7 @@ plot.diet <- function(x, y = NULL, Xvar, LonID, LatID, mapxlim, mapylim, PredSpI
 
   
   if(!is.null(filenm)){
-    dev.off()
+   # dev.off()
     cat(paste("Plots written to file ", filenm, "\n", sep = ""))
     
   } # Summary Statistics
