@@ -102,7 +102,7 @@ predictions.
 #                         Factor = "PredSpp", prey.cols = node.colsY)
 #  names(explore.diet)
 # explore.diet$dataS2
-                        
+ 
 }
 \references{
 Kuhnert, P.M., Duffy, L. M and Olson, R.J. (2012) The Analysis of Predator Diet 

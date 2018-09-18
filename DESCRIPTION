@@ -16,6 +16,7 @@ Imports:
     grDevices,
     GGally,
     lattice,
+    latticeExtra,
     maps,
     methods,
     mgcv,
