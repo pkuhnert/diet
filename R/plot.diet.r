@@ -71,6 +71,7 @@
 #' @import "rasterVis"
 #' @import "lattice"
 #' @importFrom "reshape2" "melt"
+#' @import "gridExtra"
 #' 
 #' @examples 
 #' # Load Data
@@ -90,13 +91,18 @@
 #' #                         Factor = "PredSpp", prey.cols = node.colsY)
 #' #  names(explore.diet)
 #' # explore.diet$dataS2
-#'                         
+#'  
+#' @import "ggplot2"                                               
 #' @importFrom "grDevices" "pdf" "dev.off"
 #' @importFrom "GGally" "ggpairs"
 #' @importFrom "stats" "cor"
 #' @importFrom "reshape2" "melt"
 #' @import "rpart.plot"
 #' @import "graphics"
+#' @import "raster"
+#' @import "rasterVis"
+#' @import "lattice"
+#' @import "latticeExtra"
 #'                                                  
 #' @export
 plot.diet <- function(x, y = NULL, Xvar, LonID, LatID, mapxlim, mapylim, PredSpID = NULL, SmXvar = NULL,
@@ -271,7 +277,7 @@ plot.diet <- function(x, y = NULL, Xvar, LonID, LatID, mapxlim, mapylim, PredSpI
 
   
   if(!is.null(filenm)){
-   # dev.off()
+    dev.off()
     cat(paste("Plots written to file ", filenm, "\n", sep = ""))
     
   } # Summary Statistics
@@ -286,6 +292,8 @@ plot.diet <- function(x, y = NULL, Xvar, LonID, LatID, mapxlim, mapylim, PredSpI
        expl1 = expl1, expl3 = expl3, expl4= expl4, expl5 = expl5,
        expl6 = expl6, expl7 = expl7, expl8 = expl8, expl9 = expl9, expl10 = expl10,
        plotSpComp = plotSpComp, smplot = smplot)
+  
+  
  
 }
 
