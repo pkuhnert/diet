@@ -254,6 +254,7 @@ plot.diet <- function(x, y = NULL, Xvar, LonID, LatID, mapxlim, mapylim, PredSpI
     if(missing(LatID) | missing(LonID))
       warning("Maps of smoothed variables can not be produced as you have not specified
               LatID and LonID.\n")
+    res <- smplot <- NULL
     else{
       cat("Note: Producing interpolated maps for SmXvar specified. Note, a GAM is fitted to each 
           SmXvar variable using the mgcv package and assuming normality. Users should check 
