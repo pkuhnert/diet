@@ -18,24 +18,20 @@
 #' @seealso   \code{\link{summary}}, \code{\link{dpart}}, \code{\link{print.dpart}} 
 #' 
 #' @examples 
-#' # Load data
-#' #data(yftdiet)  
-#' 
-#' # Load the prey taxa data
-#' #data(PreyTaxonSort)
+#' @export
 #' 
 #' # Assigning prey colours for default palette
-#' #val <- apc(x = yftdiet, preyfile = PreyTaxonSort, check = TRUE)
-#' #node.colsY <- val$cols
-#' #dietPP <- val$x   # updated diet matrix with Group assigned prey taxa codes
+#' val <- apc(x = yftdiet, preyfile = PreyTaxonSort, check = TRUE)
+#' node.colsY <- val$cols
+#' dietPP <- val$x   # updated diet matrix with Group assigned prey taxa codes
 #' 
 #' # Fitting the classification tree
-#' #yft.dp <- dpart(Group ~ Lat + Lon + Year + Quarter + SST  + Length, 
-#'#                   data = dietPP, weights = W, minsplit = 10,
-#' #                                    cp = 0.001)
+#' yft.dp <- dpart(Group ~ Lat + Lon + Year + Quarter + SST  + Length, 
+#'                   data = dietPP, weights = W, minsplit = 10,
+#'                                     cp = 0.001)
 #'                                     
-#' #plot(yft.dp, node.cols = node.colsY)
-#' #summary(yft.dp)
+#' plot(yft.dp, node.cols = node.colsY)
+#' summary(yft.dp)
 #' #print(yft.dp, setID = "TripSetNo")
 #' @export
 summary <- function(object, ...) 
@@ -44,8 +40,8 @@ summary <- function(object, ...)
 #' @rdname summary
 summary.dpart <- function(object, cp = 0, digits = getOption("digits"), file = "tree_output.txt", ...){
 
-
- summary.rpart(object, cp = cp, digits = digits, file = file, ...)
+#' @rdname summary
+summary.rpart(object, cp = cp, digits = digits, file = file, ...)
  wd <- getwd()
  cat(paste("Summary information written to: ", wd, "/", file, "\n", sep = ""))
 

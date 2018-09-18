@@ -35,27 +35,6 @@ It can be invoked by calling summary for an object of the appropriate class,
 or directly by calling \code{summary.dpart} regardless of the class of the object. 
 By default the summary is written to file.
 }
-\examples{
-# Load data
-#data(yftdiet)  
-
-# Load the prey taxa data
-#data(PreyTaxonSort)
-
-# Assigning prey colours for default palette
-#val <- apc(x = yftdiet, preyfile = PreyTaxonSort, check = TRUE)
-#node.colsY <- val$cols
-#dietPP <- val$x   # updated diet matrix with Group assigned prey taxa codes
-
-# Fitting the classification tree
-#yft.dp <- dpart(Group ~ Lat + Lon + Year + Quarter + SST  + Length, 
-#                   data = dietPP, weights = W, minsplit = 10,
-#                                    cp = 0.001)
-                                    
-#plot(yft.dp, node.cols = node.colsY)
-#summary(yft.dp)
-#print(yft.dp, setID = "TripSetNo")
-}
 \seealso{
 \code{\link{summary}}, \code{\link{dpart}}, \code{\link{print.dpart}}
 }
