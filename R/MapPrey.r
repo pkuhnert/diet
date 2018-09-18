@@ -1,3 +1,6 @@
+#' MapPrey
+#' 
+#' @import "ggplot2"
 MapPrey <- function(x, LonID, LatID, mapxlim, mapylim, database){
   
   unpreyID <- levels(x$Group)

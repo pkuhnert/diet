@@ -1,3 +1,6 @@
+#' MapPredator
+#' 
+#' @import "ggplot2"
 MapPredator <- function(x, LonID, LatID, mapxlim, mapylim, database, PredSpID){
   
   expl2 <- mappoints.data(x[,c(LonID,LatID)], xlim = mapxlim, ylim = mapylim,  
