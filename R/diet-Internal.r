@@ -1668,6 +1668,7 @@ writepn.csv <- function(x){
 #' @import "spaMM" 
 #' @importFrom "raster" "raster"
 #' @import "lattice"
+#' @import "latticeExtra"
 #' @importFrom "rasterVis" "levelplot"
 #' @importFrom "utils" "data"
 SmPlots <- function(x, i, SmXvar, SmXdat, LonID, LatID, projection, palette, too.far = 0.05){
