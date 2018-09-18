@@ -1697,14 +1697,14 @@ SmPlots <- function(x, i, SmXvar, SmXdat, LonID, LatID, projection, palette, too
                  main = SmXvar[i])
   
   # country layer
-  country.layer <- layer(
+  country.layer <- latticeExtra::layer(
     sp.polygons(worldcountries, fill="darkgray", col = "lightgray"),
     data=list(sp.polygons=sp.polygons, worldcountries=worldcountries, 
               fill="darkgray", col = "lightgray") 
   )
   
   # points layer
-  points.layer <- layer(
+  points.layer <- latticeExtra::layer(
     panel.points(Longitude, Latitude, pch = 16, col = "black", cex = 0.6),
     data = tmpdat
   )
