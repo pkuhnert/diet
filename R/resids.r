@@ -86,7 +86,11 @@ resids.dpart <- function(object, LonID, LatID, predID, plot = TRUE){
       v.res <- variog(coords = spdat, data = resids$Dist)
     else
       v.res <- variog(coords = spdat[-id,], data = resids$Dist[-id])
-    plot(v.res, pch = 16, max.dist = max(v.res$u)/2)
+ 
+    v_df <- data.frame(distance = v.res$u, semivariance = v.res$v)
+    semi_plot <- ggplot(v_df, aes(distance, semivariance)) + geom_point(size = 2) + xlim(0, max(v_df$distance)/2) +
+      theme_bw() + ggtitle("Variogram of Residuals")
+    print(semi_plot)
   }
   
   resids
@@ -116,7 +120,11 @@ resids.bag <- function(object, LonID, LatID, predID, plot = TRUE){
     spdat <- data.frame(Lon = Omat[,LonID], Lat = Omat[,LatID], z = resids$Dist)
     spdat <- na.omit(spdat)
     v.res <- variog(coords = spdat[,c("Lon", "Lat")], data = spdat$z)
-    plot(v.res, pch = 16, max.dist = max(v.res$u)/2)
+    v_df <- data.frame(distance = v.res$u, semivariance = v.res$v)
+    semi_plot <- ggplot(v_df, aes(distance, semivariance)) + geom_point(size = 2) + xlim(0, max(v_df$distance)/2) +
+      theme_bw() + ggtitle("Variogram of Residuals")
+    print(semi_plot)
+    
   }
   
   resids

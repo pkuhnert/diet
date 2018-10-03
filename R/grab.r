@@ -116,8 +116,7 @@ grabmulti.dpart <- function(object, LatID, LonID, setID = NULL, node.cols = NULL
   if(is.null(mapylim))
     mapylim <- range(dat[,LatID])
   
-  def.par <- par(no.readonly = TRUE)
-  
+
   nodeS <- NULL
   val <- list()
   count <- 0
@@ -134,14 +133,13 @@ grabmulti.dpart <- function(object, LatID, LonID, setID = NULL, node.cols = NULL
     nodeS <- rbind(nodeS, val[[i]]$nodeS)
     count <- count + 1
   }
-  
+ 
   res <- list(tree = val[[length(val)]]$tree, nodedata = val[[length(val)]]$nodedata,
               nodeS = nodeS)
   
   class(res) <- "grab"
   
-  par(def.par)
-  
+
   res
 }
 
