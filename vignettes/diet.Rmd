@@ -16,12 +16,13 @@ allows you to predict the diet composition and understand what environmental and
 
 ## Data
 
-Two datasets are included in the package. <More here>
+Two R datasets are included in the package. The first is a diet matrix object \texttt{yftDMraw}. The second is a predator-prey
+R object. Both are automatically loaded into the R workspace when the package is installed and attached.  The \texttt{yftDMraw} R object is a (571 $\times$ 40) data frame, where each row represents a fish sample. Columns 12 through to 40 contain the prey wet weight for any prey species found in the stomach contents of the fish.  The first 11 columns contain information about the sampling ID, date and location, sea surface temperature, size of the fish and the species of the fish. The \texttt{yftPPraw} R object is a (717 $\times$ 13) data frame that expands the fish diet information so each row represents a prey proportion (last column) for a specific prey species.
 
-```{r, echo=TRUE, fig.align = "center", fig.width=4, fig.height=4, message = FALSE}
+Below is R code for reading in a diet matrix, assigning prey colours (which have been defined in the PreyTaxonSort R data object) and updating the diet matrix with "Group" assigned prey taxa codes.
+
+```{r, echo=TRUE, fig.align = "center", fig.width=7, fig.height=4, message = FALSE}
 library(diet)
-
-# Option 1: Reading in a diet matrix.
 
 write.csv(yftDMraw, file = "yftDMraw.csv", row.names = FALSE)
 yftpp1 <- read.dm(filenm = "yftDMraw.csv",
@@ -29,10 +30,12 @@ yftpp1 <- read.dm(filenm = "yftDMraw.csv",
                   Datef = "%m/%d/%Y", diet.ind.start = 12, p = 0.01)
 val <- apc(x = yftpp1, preyfile = PreyTaxonSort, check = TRUE)
 node.colsY <- val$cols
-dietPP <- val$x   # updated diet matrix with "Group" assigned prey taxa codes
+dietPP <- val$x   
 head(dietPP)
+```
 
-# Option 2: Reading in a predator-prey matrix
+Here is an example of how to read in a predator-prey matrix. As in the previous example, we assign colours to the prey species and update the diet matrix with the prey taxa codes. This format is required for the analysis and we also include a 'predator' column.
+```{r, echo=TRUE, fig.align = "center", fig.width=7, fig.height=4, message = FALSE}
 write.csv(yftPPraw, file = "yftPPraw.csv", row.names = FALSE)
 yftpp2 <- read.pp(filenm = "yftPPraw.csv",
                   labels = list(PredatorL = "TripSetPredNo", TripSetL = "TripSetNo",
@@ -43,22 +46,21 @@ yftpp2 <- read.pp(filenm = "yftPPraw.csv",
 pal <- c(topo.colors(10)[1:2], heat.colors(10)[1:2], terrain.colors(25)[1:8])
 val <- apc(x = yftpp2, preyfile = PreyTaxonSort, palette = pal, check = TRUE)
 node.colsY <- val$cols
-dietPP <- val$x   # updated diet matrix with prey taxa codes
+dietPP <- val$x   
 head(dietPP)
 
 # Create a predator column
 dietPP$Predator <- as.factor(rep("YFT", nrow(dietPP)))
 head(dietPP)
 
-head(yftDMraw)
 ```
 
 
 ## Exploring diet data
 
-Stuff here
+After reading in the data, we can then produce a number of exploratory plots and summaries.
 
-```{r, echo = TRUE, fig.align = "center", fig.width=4, fig.height=4, message = FALSE}
+```{r, echo = TRUE, fig.align = "center", fig.width=6, fig.height=6, message = FALSE}
 explore.diet <- plot(x = dietPP, LonID = "Lon", LatID = "Lat", 
                      Xvar = c("Quarter", "Year", "SST", "Length", "Lat", "Lon"),  
                      PredSpID = "Predator", mapxlim = c(-125, -75), mapylim = c(0, 30),
@@ -66,14 +68,85 @@ explore.diet <- plot(x = dietPP, LonID = "Lon", LatID = "Lat",
                      Factor = "Predator", prey.cols = node.colsY)
 ```
 
+We can extract some summary statistics from the data that summarise the predictor variables:
 
+```{r, echo = TRUE, fig.align = "center", fig.width=6, fig.height=6, message = FALSE}
+explore.diet$dataS1
+```
+
+We can also extract information on the number of observations (nobs), number of predators (npred) and number of prey (nprey)
+
+```{r, echo = TRUE, fig.align = "center", fig.width=6, fig.height=6, message = FALSE}
+explore.diet$dataS2
+```
+
+A map showing where the samples were collected can be produced through the following:
+```{r, echo = TRUE, fig.align = "center", fig.width=6, fig.height=6, message = FALSE}
+explore.diet$expl1
+```
+
+The composition of species and proportion through time can be produced by calling the following plot:
+```{r, echo = TRUE, fig.align = "center", fig.width=6, fig.height=6, message = FALSE}
+print(explore.diet$plotSpComp) 
+```
+
+Maps showing the predictor variable's spatial distribution can be produced by calling the following plot:
+
+```{r, echo = TRUE, fig.align = "center", fig.width=6, fig.height=4, message = FALSE}
+print(explore.diet$smplot)
+```
 
 ## Building a model using the diet package
 
-Stuff here
+We now fit a classification tree to the diet data using the methodology outlined in Kuhnert et al. (XXXX).  This is achieved using the \texttt{dpart} function. We specify a complexity parameter of 0.001 to grow a large tree initially. We also specify \texttt{minsplit=10}, which does not split on a node with 10 or fewer observations. The tree is displayed using the plot function, where we pass the node colours. We also have an option to make the splits uniform. By specifying \texttt{uniform=FALSE} we produce a tree that highlights splits that are important in the model. We choose \texttt{uniform=TRUE} for the initial model as it is quite large.
 
-## Interpreting the results
+```{r, echo = TRUE, fig.align = "center", fig.width=6, fig.height=4, message = FALSE}
+yft.dp <- dpart(Group ~ Lat + Lon + Year + Quarter + SST  + Length,
+                data = dietPP, weights = W, minsplit = 10,
+                cp = 0.001)
+plot(yft.dp, node.cols=node.colsY, uniform = TRUE)
+# summary(yft.dp)  # not run as the output is large
+print(yft.dp, setID = "TripSetNo")
+```
 
-Stuff here
+We now prune the model using Breiman et al. (1984) 1SE rule.
+
+```{r, echo = TRUE, fig.align = "center", fig.width=6, fig.height=6, message = FALSE}
+
+yft.pr <- prune(yft.dp, se = 1)
+plot(yft.pr, node.cols = node.colsY)
+plot(yft.pr, node.cols = node.colsY, uniform = FALSE)
+
+```
+
+We can extract a variable importance ranking to determine which variables are the most important.
+
+```{r, echo = TRUE, fig.align = "center", fig.width=6, fig.height=6, message = FALSE}
+vi <- importance(yft.pr)
+```
+
+Maps of diversity can be produced using the \texttt{diversity} function. This index is formed from the gini index of diversity and provides an indication of how spatially diverse the ocean is in terms of prey consumed by the predator.
+```{r, echo = TRUE, fig.align = "center", fig.width=6, fig.height=6, message = FALSE}
+D <- diversity(object = yft.pr, LatID = "Lat", LonID = "Lon")
+
+```
+
+Once we are happy with the decision tree, we can explore nodes of the tree and produce a map showing the samples that fell into that node, along with a summary of the composition of prey represented by that node. The following code uses the \texttt{grab} function to allow a user to select a node for exploration.  As this code is interactive, we do not produce any ouput here.
+
+```{r, echo = TRUE, eval = FALSE, fig.align = "center", fig.width=6, fig.height=6, message = FALSE}
+val <- grab(object = yft.pr, LatID = "Lat", LonID = "Lon", setID = "TripSetNo",
+            node.cols = node.colsY, cex = 1, 
+            mapcol = "gold3")
+val <- grabmulti(object = yft.pr, LatID = "Lat", LonID = "Lon", setID = "TripSetNo",
+                 node.cols = node.colsY, cex = 1, 
+                 mapcol = "gold3")
+
+```
+
+We now form predictions.
+
+
+ 
+
 
 ## References

@@ -88,7 +88,7 @@ apc.diet <- function (x, preyfile, palette = NULL, check = FALSE)
     preynms <- preynms[order(preynms$Sort),] 
   levls <- as.vector(preynms$PreyTaxonSort)
   preyID <- match(levels(x$Group), preynms$Group)
-  
+
   if(any(is.na(preyID)) | length(levls) != length(levels(x$Group)))
     stop("Number of prey groups does not match the number in the dataset. Check your preyfile.")
   levels(x$Group) <- preynms$PreyTaxonSort[preyID]
@@ -157,17 +157,20 @@ apc.diet <- function (x, preyfile, palette = NULL, check = FALSE)
       legend <- tmp$grobs[[leg]]
       legend
     }
-    
+   
     z <- rep(1, length(node.cols))
     y <- 1:length(node.cols)
     cols <- rev(node.cols)
-  #  df <- data.frame(x, y, names(cols))
-  #  names(df) <- c("x", "y", "Species")
     df <- data.frame(x = z, y = y, Species = names(cols))
-    p <- ggplot(df, aes_string("x", "y", color = "Species")) + geom_point(shape = 15, size = 10)  +
+    df$Species <- factor(as.character(df$Species), levels = as.character(df$Species))
+   
+    p <- ggplot(df, aes_string("x", "y", color = "Species")) + 
+      geom_point(shape = 15, size = 10)  +
       scale_color_manual(values = cols) + xlab("") + ylab("") +
       theme_void() + ggtitle("Species Colours")  + 
-      theme(plot.title = element_text(hjust = 0.5), plot.margin = unit(c(0,0,0,0), "mm"))
+      theme(plot.title = element_text(hjust = 0.5), plot.margin = unit(c(0,0,0,0), "mm")) +
+      theme(legend.direction = "horizontal", legend.position = "bottom") +
+      guides(colour = guide_legend(nrow = 2))
     pleg <- g_legend(p)
     grid.arrange(pleg)
     
