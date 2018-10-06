@@ -202,7 +202,7 @@ grab.dpart <- function(object, LatID, LonID, setID = NULL, node.cols = NULL, cex
   # Plot 2: Mapping
   m <- mappoints.data(dat[,c(LonID,LatID)], xlim = mapxlim, ylim = mapylim, 
                       database = database) + geom_point(data = dat.where, 
-                                                        aes(Lon, Lat), pch = 16, size = 2,
+                                                        aes_string("Lon", "Lat"), pch = 16, size = 2,
                                                         col = node.cols[col.id]) +
     ggtitle(paste("Node ", nID, " (n_pred=",
                   subtree$frame$wt[as.integer(pred.where)],")", sep = ""))
@@ -362,7 +362,7 @@ grab.bag <- function(object, LatID, LonID, setID =  NULL, node.cols = NULL, cex 
   dev <- subtree$frame$dev[as.integer(pred.where)]
   pclass <- with(subtree, levels(data$Group)[frame[paste(node),]$yval])
   
-  par(def.par)
+ # par(def.par)
   
   res <- list(tree = subtree, nodedata = dat.where, bag.map = bag.map,
               nodeS = data.frame(node = node, nobs = nobs, nsets = nsets,

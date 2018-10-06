@@ -78,9 +78,9 @@
 #' @examples 
 #' 
 #' # Assigning prey colours for default palette
-#' val <- apc(x = yftdiet, preyfile = PreyTaxonSort, check = TRUE)
-#' node.colsY <- val$cols
-#' dietPP <- val$x   # updated diet matrix with Group assigned prey taxa codes
+#' #val <- apc(x = yftdiet, preyfile = PreyTaxonSort, check = TRUE)
+#' #node.colsY <- val$cols
+#' #dietPP <- val$x   # updated diet matrix with Group assigned prey taxa codes
 #' 
 #' 
 #' # Bagging
@@ -89,7 +89,7 @@
 #' #yft.bag <- bagging(Group ~ Lat + Lon + Year + Quarter + SST  + Length,
 #' #                      data = dietPP, weights = W, minsplit = 50,
 #' #                       cp = 0.001, nBaggs = 500, predID = "TripSetPredNo")
-#' #}
+#' #
 #' 
 #'                      
 #' @import "foreach"
@@ -119,7 +119,7 @@ bagging <- function(formula, data, weights, subset, na.action = na.dpart,
  
    
    
-   flush.console()
+ #  flush.console()
    
    bSample <- function(dat){
      resample <- function(x, ...) x[sample.int(length(x), ...)]

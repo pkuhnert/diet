@@ -90,7 +90,8 @@ mappoints.data <- function(XY.data, xlim, ylim, database = 'world', gtitle = NUL
     mp4 <- mp3 + ggtitle("Samples")
   else
     mp4 <- mp3 + ggtitle(gtitle)
-  mp4
+  
+  print(mp4)
   
   
 }

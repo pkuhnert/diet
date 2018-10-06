@@ -84,6 +84,24 @@ Users will need to determine whether spatial bootstrapping is required. They can
 use the \code{\link{resid}} function to examine the residuals from the fit of the
 model to determine whether this is required.
 }
+\examples{
+
+# Assigning prey colours for default palette
+#val <- apc(x = yftdiet, preyfile = PreyTaxonSort, check = TRUE)
+#node.colsY <- val$cols
+#dietPP <- val$x   # updated diet matrix with Group assigned prey taxa codes
+
+
+# Bagging
+# Bagging with NO spatial bootstrapping
+# N.B. Not run as this takes a while
+#yft.bag <- bagging(Group ~ Lat + Lon + Year + Quarter + SST  + Length,
+#                      data = dietPP, weights = W, minsplit = 50,
+#                       cp = 0.001, nBaggs = 500, predID = "TripSetPredNo")
+#
+
+                     
+}
 \references{
 Kuhnert, P.M., Duffy, L. M and Olson, R.J. (2012) The Analysis of Predator Diet 
 and Stable Isotope Data, Journal of Statistical Software, In Prep. 
