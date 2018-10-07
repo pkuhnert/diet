@@ -198,7 +198,7 @@ grab.dpart <- function(object, LatID, LonID, setID = NULL, node.cols = NULL, cex
   
   
   
-  browser()
+  
   # Plot 2: Mapping
   m <- mappoints.data(dat[,c(LonID,LatID)], xlim = mapxlim, ylim = mapylim, 
                       database = database) + geom_point(data = dat.where, 
