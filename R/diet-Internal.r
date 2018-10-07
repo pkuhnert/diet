@@ -1636,7 +1636,7 @@ explore <- function(object, pred, pred.where, loss = NULL, node, cols = NULL,
     theme(plot.title = element_text(hjust = 0.5, size = 16),
           plot.margin = unit(c(1,1,1.5,1.2), "cm")) 
   
-  print(p)
+  plot(p)
   
   
 }

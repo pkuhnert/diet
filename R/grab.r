@@ -206,7 +206,7 @@ grab.dpart <- function(object, LatID, LonID, setID = NULL, node.cols = NULL, cex
                                                         col = node.cols[col.id]) +
     ggtitle(paste("Node ", nID, " (n_pred=",
                   subtree$frame$wt[as.integer(pred.where)],")", sep = ""))
-  m
+  plot(m)
   
   
   # Plot 3: barplot
@@ -319,7 +319,8 @@ grab.bag <- function(object, LatID, LonID, setID =  NULL, node.cols = NULL, cex 
                                                         col = node.cols[col.id]) +
     ggtitle(paste("Node ", nID, " (n_pred=",
                   subtree$frame$wt[as.integer(pred.where)],")", sep = ""))
-    m
+  browser()
+    plot(m)
   
   
   
