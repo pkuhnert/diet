@@ -206,8 +206,7 @@ grab.dpart <- function(object, LatID, LonID, setID = NULL, node.cols = NULL, cex
                                                         col = node.cols[col.id]) +
     ggtitle(paste("Node ", nID, " (n_pred=",
                   subtree$frame$wt[as.integer(pred.where)],")", sep = ""))
-  plot(m)
-  
+
   
   # Plot 3: barplot
   subpred <- predict(subtree, type = "prob", plot = FALSE)
@@ -228,12 +227,17 @@ grab.dpart <- function(object, LatID, LonID, setID = NULL, node.cols = NULL, cex
   dev <- subtree$frame$dev[as.integer(pred.where)]
   loss <- subtree$frame$dev[as.integer(pred.where)]/subtree$frame$wt[as.integer(pred.where)]
   pclass <- with(subtree, levels(data$Group)[frame[paste(node),]$yval])
-  explore(object = subtree, pred = subpred, pred.where = subpred.where, loss = loss,
+  bp <- explore(object = subtree, pred = subpred, pred.where = subpred.where, loss = loss,
           node = pred.where, cols = node.cols, showtitle = FALSE, cex = cex)
   
-  mtext(side = 3, paste("Diet Composition (D=", round(loss, 3), ")", sep = ""),
-        line = 1.5, cex = cex)
+ # mtext(side = 3, paste("Diet Composition (D=", round(loss, 3), ")", sep = ""),
+#        line = 1.5, cex = cex)
   
+  
+  # produce plots
+  print(m)
+  print(bp)
+  browser()
   
   res <- list(tree = subtree, nodedata = dat.where,
               nodeS = data.frame(node = node, nobs = nobs, nsets = nsets,
