@@ -137,5 +137,5 @@ diversity.dpart <- function(object, newdata = NULL, too.far = 0.1, LatID, LonID,
   )
   
   
-  print(p + country.layer + points.layer)
+  p + country.layer + points.layer
 }
