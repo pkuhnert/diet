@@ -117,10 +117,7 @@ bagging <- function(formula, data, weights, subset, na.action = na.dpart,
       # Plot = plotting the spatial grid with samples (default: no plotting (FALSE))
 
  
-   
-   
- #  flush.console()
-   
+
    bSample <- function(dat){
      resample <- function(x, ...) x[sample.int(length(x), ...)]
      tt <- unlist(tapply(1:nrow(dat), as.vector(dat$Group), function(x) resample(x, size = length(x), 

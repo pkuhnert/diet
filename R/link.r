@@ -6,8 +6,6 @@
 #' @param object tree object of class \code{dpart} that is used to link the bagged predictions to.
 #' @param LatID column name for latitude.
 #' @param LonID column name for longitude.
-#' @param mapxlim vector of upper and lower limits for the x-axis of the map.
-#' @param mapylim vector of upper and lower limits for the y-axis of the map.
 #' @param plot logical. Should a plot be produced.
 #' @param oob logical. Should out of bag (oob) predictions be used to map back to the terminal nodes
 #' of the tree.
@@ -65,13 +63,12 @@
 #'  
 #' @import "abind"                                                    
 #' @export                  
-link <- function(x, object, LatID, LonID, mapxlim, mapylim,
-   plot = TRUE, oob = FALSE, mfrow = c(2,2), orderN = FALSE) 
+link <- function(x, object, LatID, LonID, plot = TRUE, oob = FALSE, mfrow = c(2,2), orderN = FALSE) 
   UseMethod("link")
 
 #' @rdname link
 #' @export
-link.bag <- function(x, object, LatID, LonID, mapxlim = NULL, mapylim = NULL,
+link.bag <- function(x, object, LatID, LonID, 
                      plot = TRUE,  oob = FALSE, mfrow = c(2,2), orderN = FALSE){
   
   # links the predictions to the terminal nodes of a tree model
@@ -80,13 +77,6 @@ link.bag <- function(x, object, LatID, LonID, mapxlim = NULL, mapylim = NULL,
     stop("Not a bagged object")
   
   dat <- object$data
-  if(plot){ 
-    if(is.null(mapxlim))
-      mapxlim <- range(dat[,LonID])
-    if(is.null(mapylim))
-      mapylim <- range(dat[,LatID])
-  } 
-  
   nBaggs <- length(x$baggs)
   nodenms <- row.names(object$frame)[object$frame$var == "<leaf>"]
   
@@ -95,16 +85,12 @@ link.bag <- function(x, object, LatID, LonID, mapxlim = NULL, mapylim = NULL,
   for(i in 1:nBaggs){
     bpred[[i]] <- data.frame(matrix(0, nrow = length(names(table(object$where))),
                                     ncol = ncol(x$pred[[i]])))
-    #         bpred[[i]] <- data.frame(matrix(0, nrow = length(nodenms),
-    #                    ncol = ncol(x$pred[[i]])))
     row.names(bpred[[i]]) <- names(table(object$where))
-    #   row.names(bpred[[i]]) <- nodenms
     names(bpred[[i]]) <- names(x$pred[[i]])
   }
   options(warn = -1)
   for(i in 1:nBaggs){
-    if(oob){  # need to ensure all nodes are represented in the list 
-      #where <- pred.rpart(object, rpart.matrix(x$data[paste(x$oob[[i]]),]))
+    if(oob){  
       where <- rpart:::pred.rpart(object, rpart.matrix(x$data[paste(x$oob[[i]]),]))
       tmp <- apply(x$pred.oob[[i]], 2, function(x, wh) tapply(x, wh, mean), where)
       n.nms <- names(table(where))
@@ -130,35 +116,51 @@ link.bag <- function(x, object, LatID, LonID, mapxlim = NULL, mapylim = NULL,
     nodenms <- as.character(sort(as.numeric(nodenms)))
   }
   
-  if(plot){
-   # if(dev.cur() == 1) windows(8,8, record = TRUE)
-    par(mfrow=mfrow)
-    nc <- ncol(bpred.m)
-    
-    ylimit <- c(-0.05,1.05)
-    
-    options(warn = -1)
-    for(i in 1:nrow(bpred.m)){
-      plot(1:nc, bpred.m[i,], pch = 15, ylim = ylimit, axes = FALSE,
-           xlab = "", ylab = "Proportion")
-      box()
-      axis(side = 2)
-      mtext(side = 1, text = names(data.frame(bpred.m)), at = 1:nc, line = 1, 
-            adj = 1, cex = 0.8, las = 2)
-      arrows(1:nc, bpred.lci[i,], 1:nc, bpred.uci[i,], length = 0.1, angle = 90,
-             code = 3)  
-      title(main = paste("Node ", nodenms[i], sep = ""))
-    }
-    par(mfrow=c(1,1))
-  }
-  
   row.names(bpred.m) <- nodenms
   row.names(bpred.v) <- nodenms
   row.names(bpred.lci) <- nodenms
   row.names(bpred.uci) <- nodenms
-  options(warn = 0)
   
-  val <- list(m = bpred.m, v = bpred.v, lci95 = bpred.lci, uci95 = bpred.uci)
+  
+  if(plot){
+
+    bpred <- melt(data.frame(bpred.m))
+    names(bpred)[2] <- "mean"
+    bpred.lci <- melt(data.frame(bpred.lci))
+    bpred.uci <- melt(data.frame(bpred.uci))
+    # add a LCI column to bpred
+    id <- match(row.names(bpred.lci), row.names(bpred))
+    bpred$lci <- bpred.lci$value[id]
+    # add a UCI column to bpred
+    id <- match(row.names(bpred.uci), row.names(bpred))
+    bpred$uci <- bpred.uci$value[id]
+    # add node information
+    bpred$node <- rep(row.names(bpred.m), ncol(bpred.m))
+    
+    bp <- list()
+    
+    un_node <- unique(bpred$node)
+    for(i in 1:length(un_node)){
+      tmp <- subset(bpred, node == un_node[i])
+      bp [[i]] <- ggplot(tmp) + 
+        geom_segment(aes(x = variable, y = lci, xend = variable, yend = uci),
+                     size = 1, lineend = "butt") + geom_point(aes(x = variable, y = mean), col = "white", size = 1, shape = "-") +
+                     xlab("") + ylab("Proportion") + theme_bw() + ggtitle(paste("Node ", un_node[i])) +
+        theme(plot.title = element_text(hjust = 0.5), axis.text.x = element_text(angle = 45, hjust = 1)) 
+    }
+
+
+    m_bp <- marrangeGrob(grobs = bp, nrow = 3, ncol = 3, top = "Node Predictions with 95% Bootstrapped CIs")
+    # print to screen
+    m_bp
+    # save to file
+    ggsave("Node_Predictions.pdf", m_bp, width = 8, height = 6)
+    cat("Figure saved to file: Node_Predictions.pdf")
+    val <- list(m = bpred.m, v = bpred.v, lci95 = bpred.lci, uci95 = bpred.uci, m_bp = m_bp)
+    
+  }
+  else
+    val <- list(m = bpred.m, v = bpred.v, lci95 = bpred.lci, uci95 = bpred.uci, m_bp = NULL)
   
   class(val) <- c("link")
   

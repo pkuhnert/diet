@@ -100,6 +100,7 @@ resids.dpart <- function(object, LonID, LatID, predID, plot = TRUE){
 
 #' @rdname resids
 #' @import "geoR"
+#' @importFrom "abind" "abind"
 #' @export
 resids.bag <- function(object, LonID, LatID, predID, plot = TRUE){
   
@@ -107,7 +108,7 @@ resids.bag <- function(object, LonID, LatID, predID, plot = TRUE){
   if (!inherits(object, "bag")) 
     stop("Not an bagged object")
   
-  pred <- do.call(abind, c(object$predP, along = 3))
+  pred <- do.call("abind", c(object$predP, along = 3))
   pred <- apply(pred, c(1,2), mean)
   
   Omat <- formOmat(object$data, ID = predID)
