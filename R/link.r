@@ -61,12 +61,14 @@
 #' #                   mfrow = c(2,2))
 #'             
 #'  
-#' @import "abind"                                                    
 #' @export                  
 link <- function(x, object, LatID, LonID, plot = TRUE, oob = FALSE, mfrow = c(2,2), orderN = FALSE) 
   UseMethod("link")
 
 #' @rdname link
+#' @import "reshape2"
+#' @import "abind"  
+#' @importFrom "gridExtra" "marrangeGrob"
 #' @export
 link.bag <- function(x, object, LatID, LonID, 
                      plot = TRUE,  oob = FALSE, mfrow = c(2,2), orderN = FALSE){
