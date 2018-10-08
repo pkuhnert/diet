@@ -80,7 +80,7 @@ resids.dpart <- function(object, LonID, LatID, predID, plot = TRUE){
   
   
   
-  
+  browser()
   if(plot){
     spdat <- data.frame(Lon = Omat$Lon, Lat = Omat$Lat)
     id <- (1:nrow(spdat))[apply(spdat, 1, function(x) any(is.na(x)))]
