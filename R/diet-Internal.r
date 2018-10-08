@@ -1574,7 +1574,8 @@ nodevals[id,1:3] <- NA
 preyO <- 1:length(nodevals$prey)
 
 
-p <- ggplot(nodevals, mapping = aes_string(x = reorder("prey", preyO), y = "lci95")) + 
+#p <- ggplot(nodevals, mapping = aes_string(x = reorder("prey", preyO), y = "lci95")) + 
+p <- ggplot(nodevals, mapping = aes(x = reorder(prey, preyO), y = lci95)) + 
   geom_segment(stat = "identity", aes_string(xend = "prey", yend = "uci95", 
                                       colour = reorder(cols, preyO)), 
                lineend = "butt", size = 1.5, 
@@ -1585,12 +1586,11 @@ p <- ggplot(nodevals, mapping = aes_string(x = reorder("prey", preyO), y = "lci9
   ylim(ylim) + xlab("") + ylab("Bootstrapped Proportion") + 
   ggtitle(paste("Node", node)) + theme_bw() +
   theme(plot.title = element_text(hjust = 0.5, size = 16),
-        plot.margin = unit(c(1,1,1.5,1.2), "cm")) 
+        plot.margin = unit(c(1,1,1.5,1.2), "cm"), axis.text.x = element_text(angle = 45, hjust = 1)) 
 
-print(p)
 
-data.frame(m = object$m[bID,], v = object$v[bID,], lci95 = object$lci95[bID,],
-           uci95 = object$uci95[bID,])
+list(df = data.frame(m = object$m[bID,], v = object$v[bID,], lci95 = object$lci95[bID,],
+           uci95 = object$uci95[bID,]), p = p)
 }
 
 #' @rdname diet-Internal
@@ -1634,7 +1634,7 @@ explore <- function(object, pred, pred.where, loss = NULL, node, cols = NULL,
     ggtitle(paste("Node ", row.names(object$frame)[as.integer(node)], "\n",
                   "Diet Composition (D=", round(loss, 3), ")", sep = "")) + theme_bw() +
     theme(plot.title = element_text(hjust = 0.5, size = 16),
-          plot.margin = unit(c(1,1,1.5,1.2), "cm")) 
+          plot.margin = unit(c(1,1,1.5,1.2), "cm"), axis.text.x = element_text(angle = 45, hjust = 1)) 
   
  invisible(p)
   

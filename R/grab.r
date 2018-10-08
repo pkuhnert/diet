@@ -229,7 +229,8 @@ grab.dpart <- function(object, LatID, LonID, setID = NULL, node.cols = NULL, cex
   
   res <- list(tree = subtree, nodedata = dat.where,
               nodeS = data.frame(node = node, nobs = nobs, nsets = nsets,
-                                 npredators = npredators, nprey = nprey, dev = dev, loss = loss, pclass = pclass))
+                                 npredators = npredators, nprey = nprey, dev = dev, loss = loss, pclass = pclass),
+              plots = list(map = m, raw_bp = bp))
   
   class(res) <- "grab"
   
@@ -310,7 +311,7 @@ grab.bag <- function(object, LatID, LonID, setID =  NULL, node.cols = NULL, cex 
   
   nodestats <- explore.bag(bag.map, nID, cols = node.cols,
                            showtitle = FALSE, axis.side = 4, cex = cex, ylim = ylim)
-browser()
+
   
   # Calculating summary statistics about the node
   
@@ -330,13 +331,17 @@ browser()
   pclass <- with(subtree, levels(data$Group)[frame[paste(node),]$yval])
   
   # produce plots
-  grid.arrange(m, bp, ncol = 1)
-  
+
+  #grid.arrange(m, bp, nodestats$p, layout_matrix = rbind(c(1,1,2,2),
+  #                                                       c(1,1,3,3)))
+  marrangeGrob(list(m, bp, nodestats$p), layout_matrix = rbind(c(1,1,2,2),
+                                                               c(1,1,3,3)),
+               top = "Selected Node")
 
   res <- list(tree = subtree, nodedata = dat.where, bag.map = bag.map,
               nodeS = data.frame(node = node, nobs = nobs, nsets = nsets,
                                  npredators = npredators, nprey = nprey, dev = dev, loss = loss, pclass = pclass),
-              nodestats = nodestats)
+              nodestats = nodestats$df, plots = list(map = m, raw_bp = bp, boot_bp = nodestats$p))
   
   class(res) <- "grab"
   
