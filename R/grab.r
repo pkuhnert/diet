@@ -332,17 +332,17 @@ grab.bag <- function(object, LatID, LonID, setID =  NULL, node.cols = NULL, cex 
   
   # produce plots
 
-  grid.arrange(m, bp, nodestats$p, layout_matrix = rbind(c(1,1,2,2),
-                                                         c(1,1,3,3)), 
-               widths = 8, heights = 6)
-  #marrangeGrob(list(m, bp, nodestats$p), layout_matrix = rbind(c(1,1,2,2),
-  #                                                             c(1,1,3,3)),
-  #             top = "Selected Node")
+  #grid.arrange(m, bp, nodestats$p, layout_matrix = rbind(c(1,1,2,2),
+  #                                                       c(1,1,3,3)), 
+  #             widths = 8, heights = 6)
+  m_plots <- marrangeGrob(list(m, bp, nodestats$p), layout_matrix = rbind(c(1,1,2,2),
+                                                               c(1,1,3,3)),
+               top = "Selected Node")
 
   res <- list(tree = subtree, nodedata = dat.where, bag.map = bag.map,
               nodeS = data.frame(node = node, nobs = nobs, nsets = nsets,
                                  npredators = npredators, nprey = nprey, dev = dev, loss = loss, pclass = pclass),
-              nodestats = nodestats$df, plots = list(map = m, raw_bp = bp, boot_bp = nodestats$p))
+              nodestats = nodestats$df, plots = list(map = m, raw_bp = bp, boot_bp = nodestats$p, m_plots = m_plots))
   
   class(res) <- "grab"
   
