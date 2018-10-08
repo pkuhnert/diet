@@ -23,9 +23,6 @@
 #' @param database either 'world' or 'world2' are available for plotting. 
 #' Defaults to 'world' if
 #' not specified.
-#' @param onepage logical. If \code{TRUE}, produces all of the plots on a 
-#' single page. (Set to \code{FALSE}
-#' if you want publication quality plots appearing on each page).
 #' @param display.object tree object to display. This may be different 
 #' to \code{object} when bagging is used.
 #' @param oob logical. Option when a bagged tree is passed to the 
@@ -35,7 +32,6 @@
 #' Defaults to the number in the tree.
 #' @param ylim y-axis limit for barcharts that are produced by the 
 #' \code{explore} function
-#' @param \dots  arguments to be passed to or from other methods
 #' 
 #' 
 #'                                                        
@@ -153,7 +149,7 @@ grabmulti <-function(object, LatID, LonID, setID = NULL, node.cols = NULL, cex =
 #' @rdname grab
 #' @export
 grab.dpart <- function(object, LatID, LonID, setID = NULL, node.cols = NULL, cex = 0.8, 
-                       mapxlim = NULL, mapylim = NULL, mapcol = "black", database = 'world', onepage = TRUE, ...){  
+                       mapxlim = NULL, mapylim = NULL, mapcol = "black", database = 'world'){  
   
   
   if (!inherits(object, "dpart"))
@@ -194,11 +190,7 @@ grab.dpart <- function(object, LatID, LonID, setID = NULL, node.cols = NULL, cex
   pred.where <- names(table(subtree$where))[(1:length(rn))[rn == nID]]
   dat.where <- dat[subtree$where == pred.where,]
   col.id <- unlist(strsplit(res$labs[id], "\n"))[1]
- # rect(res$boxes$x1[id], res$boxes$y1[id], res$boxes$x2[id], res$boxes$y2[id],
-#       col = NA, border = "black", lwd = 2)
-  
-  
-  
+
   
   # Plot 2: Mapping
   m <- mappoints.data(dat[,c(LonID,LatID)], xlim = mapxlim, ylim = mapylim, 
@@ -231,21 +223,9 @@ grab.dpart <- function(object, LatID, LonID, setID = NULL, node.cols = NULL, cex
   bp <- explore(object = subtree, pred = subpred, pred.where = subpred.where, loss = loss,
           node = pred.where, cols = node.cols, showtitle = FALSE, cex = cex)
   
- # mtext(side = 3, paste("Diet Composition (D=", round(loss, 3), ")", sep = ""),
-#        line = 1.5, cex = cex)
-  
-  
   # produce plots
-  if(onepage){
     grid.arrange(m,bp, ncol = 1)
-    
-  }
-  else{
-    print(m)
-    print(bp)
-  }
 
-  
   
   res <- list(tree = subtree, nodedata = dat.where,
               nodeS = data.frame(node = node, nobs = nobs, nsets = nsets,
@@ -261,7 +241,7 @@ grab.dpart <- function(object, LatID, LonID, setID = NULL, node.cols = NULL, cex
 #' @export
 grab.bag <- function(object, LatID, LonID, setID =  NULL, node.cols = NULL, cex = 0.8,
                      mapxlim = NULL, mapylim = NULL, mapcol = "gold3", database = 'world',  
-                     onepage = TRUE, display.object, oob = FALSE, ylim){
+                     display.object, oob = FALSE, ylim){
   
   
   if (!inherits(object, "bag"))
@@ -283,25 +263,6 @@ grab.bag <- function(object, LatID, LonID, setID =  NULL, node.cols = NULL, cex 
   
   
   
-  #if(onepage){
-  #  layout(rbind( c(1, 1, 0, 2, 2),
-  #                c(1, 1, 0, 2, 2), 
-  #                c(1, 1, 0, 3, 3),
-  #                c(1, 1, 0, 3, 3)), widths = c(1.5, 1.5, lcm(1.5), 1.5, 1), 
-  #                heights = c(2, 1, 2, 1), 
-  #         respect = TRUE)
-  
-  #  par(cex = 0.75)
-  # Plot 1: Tree
-  #  plotG.dpart(display.object, node.cols = node.cols, cex = cex, pos = "topleft")
-  
-  #}
-  #else{
-  # Plot 1: Tree
-  #  plot.dpart(display.object, node.cols = node.cols, keep.margins = TRUE)
-  #  
-  #}
-  
   res <- plot.dpart(display.object, node.cols = node.cols, keep.margins = TRUE)
   
   val <- rpartco.dpart(display.object)
@@ -321,9 +282,7 @@ grab.bag <- function(object, LatID, LonID, setID =  NULL, node.cols = NULL, cex 
   pred.where <- names(table(subtree$where))[(1:length(rn))[rn == nID]]
   dat.where <- dat[subtree$where == pred.where,]
   col.id <- unlist(strsplit(res$labs[id], "\n"))[1]
-  rect(res$boxes$x1[id], res$boxes$y1[id], res$boxes$x2[id], res$boxes$y2[id],
-       col = NA, border = "black", lwd = 2)
-  
+
   # Plot 2: Mapping
   m <- mappoints.data(dat[,c(LonID,LatID)], xlim = mapxlim, ylim = mapylim, 
                       database = database) + geom_point(data = dat.where, 
@@ -332,16 +291,14 @@ grab.bag <- function(object, LatID, LonID, setID =  NULL, node.cols = NULL, cex 
     ggtitle(paste("Node ", nID, " (n_pred=",
                   subtree$frame$wt[as.integer(pred.where)],")", sep = ""))
 
-    plot(m)
-  
-  
+
   
   loss <- subtree$frame$dev[as.integer(pred.where)]/subtree$frame$wt[as.integer(pred.where)]
   
   # barplot
   subpred <- predict(subtree, type = "prob", plot = FALSE)
   subpred.where <- subtree$where
-  explore(object = subtree, pred = subpred, pred.where = subpred.where, loss,
+  bp <- explore(object = subtree, pred = subpred, pred.where = subpred.where, loss,
           node = pred.where, cols = node.cols, showtitle = FALSE, labels = FALSE, cex = cex, ylim = ylim)
   
   
@@ -353,10 +310,7 @@ grab.bag <- function(object, LatID, LonID, setID =  NULL, node.cols = NULL, cex 
   
   nodestats <- explore.bag(bag.map, nID, cols = node.cols,
                            showtitle = FALSE, axis.side = 4, cex = cex, ylim = ylim)
-  legend("topleft", legend = "Bootstrapped proportions", bty = "n")
-  
-  
-  
+browser()
   
   # Calculating summary statistics about the node
   
@@ -375,8 +329,10 @@ grab.bag <- function(object, LatID, LonID, setID =  NULL, node.cols = NULL, cex 
   dev <- subtree$frame$dev[as.integer(pred.where)]
   pclass <- with(subtree, levels(data$Group)[frame[paste(node),]$yval])
   
- # par(def.par)
+  # produce plots
+  grid.arrange(m, bp, ncol = 1)
   
+
   res <- list(tree = subtree, nodedata = dat.where, bag.map = bag.map,
               nodeS = data.frame(node = node, nobs = nobs, nsets = nsets,
                                  npredators = npredators, nprey = nprey, dev = dev, loss = loss, pclass = pclass),
@@ -384,8 +340,7 @@ grab.bag <- function(object, LatID, LonID, setID =  NULL, node.cols = NULL, cex 
   
   class(res) <- "grab"
   
-  options(warn = 0)
-  
+ 
   res
   
 }

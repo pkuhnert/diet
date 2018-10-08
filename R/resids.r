@@ -65,6 +65,7 @@ resids <- function(object, LonID, LatID, predID, plot = TRUE)
 
 #' @rdname resids
 #' @import "geoR"
+#' @export
 resids.dpart <- function(object, LonID, LatID, predID, plot = TRUE){
   
   
@@ -101,6 +102,7 @@ resids.dpart <- function(object, LonID, LatID, predID, plot = TRUE){
 
 #' @rdname resids
 #' @import "geoR"
+#' @export
 resids.bag <- function(object, LonID, LatID, predID, plot = TRUE){
   
   

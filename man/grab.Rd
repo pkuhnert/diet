@@ -23,12 +23,12 @@ grabmulti(object, LatID, LonID, setID = NULL, node.cols = NULL,
 
 \method{grab}{dpart}(object, LatID, LonID, setID = NULL,
   node.cols = NULL, cex = 0.8, mapxlim = NULL, mapylim = NULL,
-  mapcol = "black", database = "world", onepage = TRUE, ...)
+  mapcol = "black", database = "world")
 
 \method{grab}{bag}(object, LatID, LonID, setID = NULL,
   node.cols = NULL, cex = 0.8, mapxlim = NULL, mapylim = NULL,
-  mapcol = "gold3", database = "world", onepage = TRUE,
-  display.object, oob = FALSE, ylim)
+  mapcol = "gold3", database = "world", display.object, oob = FALSE,
+  ylim)
 }
 \arguments{
 \item{object}{tree object either of class \code{dpart} or \code{bag}}
@@ -57,10 +57,6 @@ range of the data are used.}
 Defaults to 'world' if
 not specified.}
 
-\item{onepage}{logical. If \code{TRUE}, produces all of the plots on a 
-single page. (Set to \code{FALSE}
-if you want publication quality plots appearing on each page).}
-
 \item{display.object}{tree object to display. This may be different 
 to \code{object} when bagging is used.}
 
@@ -73,8 +69,6 @@ use out of bag estimates.}
 
 \item{n}{numeric. Maximum number of nodes to investigate in the tree. 
 Defaults to the number in the tree.}
-
-\item{\dots}{arguments to be passed to or from other methods}
 }
 \value{
 Summary output from the node/s selected in the tree 
