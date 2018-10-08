@@ -91,7 +91,7 @@ mappoints.data <- function(XY.data, xlim, ylim, database = 'world', gtitle = NUL
   else
     mp4 <- mp3 + ggtitle(gtitle)
   
-  plot(mp4)
+  invisible(mp4)
   
   
 }

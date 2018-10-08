@@ -120,6 +120,7 @@ grabmulti.dpart <- function(object, LatID, LonID, setID = NULL, node.cols = NULL
   nodeS <- NULL
   val <- list()
   count <- 0
+
   while(count < n){
     cat("Click to show the tree\n")
     ll <- grid.locator(unit = "points")
@@ -166,9 +167,9 @@ grab.dpart <- function(object, LatID, LonID, setID = NULL, node.cols = NULL, cex
   class(dat) <- c("data", class(dat))
   
   if(is.null(mapxlim))
-    mapxlim <- range(dat[,LonID])
+    mapxlim <- range(dat[,LonID], na.rm = TRUE)
   if(is.null(mapylim))
-    mapylim <- range(dat[,LatID])
+    mapylim <- range(dat[,LatID], na.rm = TRUE)
   
   
   res <- plot.dpart(object, node.cols = node.cols, keep.margins = TRUE)
@@ -193,8 +194,8 @@ grab.dpart <- function(object, LatID, LonID, setID = NULL, node.cols = NULL, cex
   pred.where <- names(table(subtree$where))[(1:length(rn))[rn == nID]]
   dat.where <- dat[subtree$where == pred.where,]
   col.id <- unlist(strsplit(res$labs[id], "\n"))[1]
-  rect(res$boxes$x1[id], res$boxes$y1[id], res$boxes$x2[id], res$boxes$y2[id],
-       col = NA, border = "black", lwd = 2)
+ # rect(res$boxes$x1[id], res$boxes$y1[id], res$boxes$x2[id], res$boxes$y2[id],
+#       col = NA, border = "black", lwd = 2)
   
   
   
@@ -235,8 +236,15 @@ grab.dpart <- function(object, LatID, LonID, setID = NULL, node.cols = NULL, cex
   
   
   # produce plots
-  plot(m)
-  plot(bp)
+  if(onepage){
+    grid.arrange(m,bp, ncol = 1)
+    
+  }
+  else{
+    print(m)
+    print(bp)
+  }
+
   
   
   res <- list(tree = subtree, nodedata = dat.where,
@@ -323,7 +331,7 @@ grab.bag <- function(object, LatID, LonID, setID =  NULL, node.cols = NULL, cex 
                                                         col = node.cols[col.id]) +
     ggtitle(paste("Node ", nID, " (n_pred=",
                   subtree$frame$wt[as.integer(pred.where)],")", sep = ""))
-  browser()
+
     plot(m)
   
   
