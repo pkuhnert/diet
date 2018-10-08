@@ -78,9 +78,7 @@ resids.dpart <- function(object, LonID, LatID, predID, plot = TRUE){
   resids <- Distance(O = Omat[,(ncol(Omat)-ncol(pp)+1):ncol(Omat)], 
                      P = pp, type = "Hellinger")
   
-  
-  
-  browser()
+
   if(plot){
     spdat <- data.frame(Lon = Omat$Lon, Lat = Omat$Lat)
     id <- (1:nrow(spdat))[apply(spdat, 1, function(x) any(is.na(x)))]
@@ -92,7 +90,7 @@ resids.dpart <- function(object, LonID, LatID, predID, plot = TRUE){
     v_df <- data.frame(distance = v.res$u, semivariance = v.res$v)
     semi_plot <- ggplot(v_df, aes(distance, semivariance)) + geom_point(size = 2) + xlim(0, max(v_df$distance)/2) +
       theme_bw() + ggtitle("Variogram of Residuals")
-    print(semi_plot)
+    semi_plot
   }
   
   resids
