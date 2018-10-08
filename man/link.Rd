@@ -5,12 +5,11 @@
 \alias{link.bag}
 \title{Links Bagged Predictions to Tree}
 \usage{
-link(x, object, LatID, LonID, mapxlim, mapylim, plot = TRUE,
-  oob = FALSE, mfrow = c(2, 2), orderN = FALSE)
+link(x, object, LatID, LonID, plot = TRUE, oob = FALSE, mfrow = c(2,
+  2), orderN = FALSE)
 
-\method{link}{bag}(x, object, LatID, LonID, mapxlim = NULL,
-  mapylim = NULL, plot = TRUE, oob = FALSE, mfrow = c(2, 2),
-  orderN = FALSE)
+\method{link}{bag}(x, object, LatID, LonID, plot = TRUE, oob = FALSE,
+  mfrow = c(2, 2), orderN = FALSE)
 }
 \arguments{
 \item{x}{object of class \code{bag}.}
@@ -20,10 +19,6 @@ link(x, object, LatID, LonID, mapxlim, mapylim, plot = TRUE,
 \item{LatID}{column name for latitude.}
 
 \item{LonID}{column name for longitude.}
-
-\item{mapxlim}{vector of upper and lower limits for the x-axis of the map.}
-
-\item{mapylim}{vector of upper and lower limits for the y-axis of the map.}
 
 \item{plot}{logical. Should a plot be produced.}
 
