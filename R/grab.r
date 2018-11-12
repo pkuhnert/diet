@@ -29,7 +29,7 @@
 #' use out of bag estimates.
 #' @param n numeric. Maximum number of nodes to investigate in the tree. 
 #' Defaults to the number in the tree.
-#' @param ylim y-axis limit for barcharts that are produced by the 
+#' @param ylimit y-axis limit for barcharts that are produced by the 
 #' \code{explore} function
 #' 
 #' 
@@ -86,7 +86,8 @@
 #' }
 #' @export
 grab <- function(object, LatID, LonID, setID = NULL, node.cols = NULL, cex = 0.8, 
-                 mapxlim = NULL, mapylim = NULL, database = 'world') UseMethod("grab")
+                 mapxlim = NULL, mapylim = NULL, database = 'world',
+                 display.object, oob = FALSE, ylimit) UseMethod("grab")
 
 
 
@@ -238,7 +239,7 @@ grab.dpart <- function(object, LatID, LonID, setID = NULL, node.cols = NULL, cex
 #' @export
 grab.bag <- function(object, LatID, LonID, setID =  NULL, node.cols = NULL, cex = 0.8,
                      mapxlim = NULL, mapylim = NULL, database = 'world',  
-                     display.object, oob = FALSE, ylim){
+                     display.object, oob = FALSE, ylimit){
   
   
   if (!inherits(object, "bag"))
@@ -296,17 +297,17 @@ grab.bag <- function(object, LatID, LonID, setID =  NULL, node.cols = NULL, cex 
   subpred <- predict(subtree, type = "prob", plot = FALSE)
   subpred.where <- subtree$where
   bp <- explore(object = subtree, pred = subpred, pred.where = subpred.where, loss,
-          node = pred.where, cols = node.cols, showtitle = FALSE, labels = FALSE, cex = cex, ylim = ylim)
+          node = pred.where, cols = node.cols, showtitle = FALSE, labels = FALSE, cex = cex, ylim = ylimit)
 
   
   # bootstrap estimates
-  if(missing(ylim))
-    ylim <- c(-0.05,1.05)
+  if(missing(ylimit))
+    ylimit <- c(-0.05,1.05)
   bag.map <- link(object, subtree, LatID, LonID,  oob = oob, plot = FALSE)
   options(warn = -1)
   
   nodestats <- explore.bag(bag.map, nID, cols = node.cols,
-                           showtitle = FALSE, axis.side = 4, cex = cex, ylim = ylim)
+                           showtitle = FALSE, axis.side = 4, cex = cex, ylim = ylimit)
 
   
   # Calculating summary statistics about the node
