@@ -6,14 +6,13 @@
 \title{Partial Dependence Plots}
 \usage{
 partdep(object, Xvar, Yvar = NULL, fact = FALSE, var.cond = NULL,
-  plotmap = FALSE, mfrow = NULL, xlim = NULL, ylim = NULL,
-  leg.pos = "topleft", plot2file = FALSE, se.fit = FALSE,
-  too.far = 0.1, sp.id = NULL)
+  plotmap = FALSE, ylimit = NULL, leg.pos = "topleft",
+  plot2file = FALSE, se.fit = FALSE, too.far = 0.1, sp.id = NULL)
 
 \method{partdep}{bag}(object, Xvar, Yvar = NULL, fact = FALSE,
-  var.cond = NULL, plotmap = FALSE, mfrow = NULL, xlim = NULL,
-  ylim = NULL, leg.pos = "topleft", plot2file = FALSE,
-  se.fit = FALSE, too.far = 0.1, sp.id = NULL, palette)
+  var.cond = NULL, plotmap = FALSE, ylimit = NULL,
+  plot2file = FALSE, se.fit = FALSE, too.far = 0.1, sp.id = NULL,
+  palette)
 }
 \arguments{
 \item{object}{object of class \code{bag}}
@@ -32,13 +31,7 @@ then plots are produced for all prey.}
 \item{plotmap}{logical. Should a map be plotted? Only useful if longitude and latitude are being
 plotted as a 2D plot. (default = FALSE)}
 
-\item{mfrow}{plotting argument for 1D plots indicating the number of frames per row to plot 
-(default: c(2,2)). See \code{\link{par}} for more details.}
-
-\item{xlim}{range of values the x-axis takes when plotting. Defaults to the range of the x-data.
-See \code{\link{par}} for more details.}
-
-\item{ylim}{range of values the y-axis takes when plotting. Defaults to the range of the y-data.
+\item{ylimit}{range of values the y-axis takes when plotting. Defaults to the range of the y-data.
 See \code{\link{par}} for more details.}
 
 \item{leg.pos}{position for the prey names in the 2D plots. Defaults to "topleft".}

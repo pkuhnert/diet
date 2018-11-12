@@ -9,7 +9,6 @@
 #' @param newdata optional data set to predict on.
 #' @param type either "prob" or "class" to specify probabilities or 
 #' classifications.
-#' @param na.action what to do about missing values. (Default is to omit).
 #' @param node.cols node.cols
 #' @param plot logical. Produce a plot of the predictions if TRUE 
 #' otherwise just write the predictions
@@ -63,7 +62,8 @@
 #' # predict classification  for each observation in the dataset
 #' #yft.predC <- predict(yft.pr, type = "class")   # predicted 
 #' #classification
-#'                           
+#'          
+#' @importFrom "stats" "na.pass"                                         
 #' @export
 predict <- function(object, ...){
       UseMethod("predict")
@@ -72,7 +72,7 @@ predict <- function(object, ...){
 #' @rdname predict
 #' @export
 predict.dpart <- function(object, newdata = list(), type = c("prob", "class"), 
-                          na.action, node.cols = NULL,
+                        node.cols = NULL,
            plot = TRUE, pred.type = "obs", predatorID = NULL, cex = 1.0, ...){
     
     if(plot)
@@ -94,7 +94,7 @@ predict.dpart <- function(object, newdata = list(), type = c("prob", "class"),
       if (is.null(attr(newdata, "terms"))) {
         Terms <- delete.response(object$terms)
         ID <- newdata[,predatorID]
-        newdata <- model.frame(Terms, newdata, na.action = tree::na.pass, 
+        newdata <- model.frame(Terms, newdata, na.action = na.pass, 
                                xlev = attr(object, "xlevels"))
         if (!is.null(cl <- attr(Terms, "dataClasses"))) 
           .checkMFClasses(cl, newdata, TRUE)

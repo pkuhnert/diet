@@ -14,11 +14,7 @@
 #' @param var.cond name of the conditioning variable used to condition each plot by.
 #' @param plotmap logical. Should a map be plotted? Only useful if longitude and latitude are being
 #' plotted as a 2D plot. (default = FALSE)
-#' @param mfrow plotting argument for 1D plots indicating the number of frames per row to plot 
-#' (default: c(2,2)). See \code{\link{par}} for more details.
-#' @param xlim range of values the x-axis takes when plotting. Defaults to the range of the x-data.
-#' See \code{\link{par}} for more details.
-#' @param ylim range of values the y-axis takes when plotting. Defaults to the range of the y-data.
+#' @param ylimit range of values the y-axis takes when plotting. Defaults to the range of the y-data.
 #' See \code{\link{par}} for more details.
 #' @param leg.pos position for the prey names in the 2D plots. Defaults to "topleft".
 #' @param plot2file logical. Should the plots be written to file. If so, the file name defaults to "partdep.pdf"
@@ -80,7 +76,7 @@
 #'
 #' @export
 partdep <- function(object, Xvar, Yvar = NULL, fact = FALSE, var.cond = NULL, 
-                    plotmap = FALSE, mfrow = NULL, xlim = NULL, ylim = NULL, 
+                    plotmap = FALSE,  ylimit = NULL, 
                     leg.pos = "topleft", plot2file = FALSE, se.fit = FALSE, too.far = 0.1,
                     sp.id = NULL) UseMethod("partdep")
 
@@ -94,19 +90,14 @@ partdep <- function(object, Xvar, Yvar = NULL, fact = FALSE, var.cond = NULL,
 #' @importFrom "stats" "delete.response"
 #' @export
 partdep.bag <- function (object, Xvar, Yvar = NULL, fact = FALSE, var.cond = NULL, 
-          plotmap = FALSE, mfrow = NULL, xlim = NULL, ylim = NULL, 
-          leg.pos = "topleft", plot2file = FALSE, se.fit = FALSE, too.far = 0.1,
+          plotmap = FALSE,   ylimit = NULL, 
+          plot2file = FALSE, se.fit = FALSE, too.far = 0.1,
           sp.id = NULL, palette) 
   
 {
   if (plot2file) 
     pdf("partdep.pdf")
-  def.par <- par(no.readonly = TRUE)
-  
-  par(new = FALSE, mar = c(5, 4, 4, 2) + 0.1, mfrow = c(1, 
-                                                        1))
-  if (is.null(mfrow)) 
-    mfrow <- c(3, 3)
+
   if (!inherits(object, "bag")) 
     stop("Not a bagged object")
   if (length(var.cond) > 1) 
@@ -182,7 +173,6 @@ partdep.bag <- function (object, Xvar, Yvar = NULL, fact = FALSE, var.cond = NUL
       }
     }
     else {
-      
       x.labels <- attr(object$baggs[[1]]$terms, "term.labels")
       Xmat <- dat[, x.labels]
       Xmatn <- Xmat[, -c(match(Xvar[1], names(Xmat)), match(Xvar[2], 
@@ -364,6 +354,7 @@ partdep.bag <- function (object, Xvar, Yvar = NULL, fact = FALSE, var.cond = NUL
     }
   }
   else {
+   
     pred <- predict(object$baggs[[1]], dat, type = "prob", 
                     plot = FALSE)
     for (i in 2:length(object$baggs)) pred <- pred + predict(object$baggs[[i]], 
@@ -377,6 +368,7 @@ partdep.bag <- function (object, Xvar, Yvar = NULL, fact = FALSE, var.cond = NUL
                       ]
     else predcN <- predc[!is.na(X), ]
     X <- na.omit(X)
+ 
     options(warn = 0)
     if (!is.null(Yvar)) {
       if (all(is.integer(Yvar)) | length(na.omit(match(Yvar, 
@@ -398,8 +390,8 @@ partdep.bag <- function (object, Xvar, Yvar = NULL, fact = FALSE, var.cond = NUL
     names(mat) <- names(predcN)
     names(mat.L) <- names(predcN)
     names(mat.U) <- names(predcN)
-    if (is.null(ylim)) 
-      ylim <- c(0, 1)
+    if (is.null(ylimit)) 
+      ylimit <- c(0, 1)
     if (is.factor(X)) {
       nms <- names(mat)
     #  par(mfrow = mfrow, mar = c(5, 4, 4, 2) + 0.1, ask = TRUE)
@@ -429,7 +421,7 @@ partdep.bag <- function (object, Xvar, Yvar = NULL, fact = FALSE, var.cond = NUL
         #  tmp <- subset(mat_melt, variable == nms[i])
           tmp <- mat_melt[mat_melt$variable == nms[i],]
           
-          
+        
           pdF[[i]] <- ggplot(tmp) +
             geom_segment(aes_string(x = "category", y = "lci", xend = "category", yend = "uci"),
                           lineend = "butt", arrow = arrow(angle = 90, 
@@ -441,14 +433,16 @@ partdep.bag <- function (object, Xvar, Yvar = NULL, fact = FALSE, var.cond = NUL
                   axis.text.x = element_text(angle = 0, hjust = 1)) 
           
         }
+       
         m_p <- marrangeGrob(grobs = pdF, nrow = 3, ncol = 3, top = "Partial Dependence Plot")
-     
+        
         options(warn = 0)
       }
       else {
+        browser()
         for (i in 1:ncol(mat)) {
           val <- barplot(mat[, i], names.arg = "", main = nms[i], 
-                         ylim = ylim, ylab = "Proportion", axes = FALSE)
+                         ylim = ylimit, ylab = "Proportion", axes = FALSE)
           axis(side = 2)
           x.nms <- levels(X)
           if (any(sapply(x.nms, nchar) > 3)) 
@@ -488,28 +482,33 @@ partdep.bag <- function (object, Xvar, Yvar = NULL, fact = FALSE, var.cond = NUL
       matL <- na.omit(matL)
       matU <- na.omit(matU)
       Xnew <- Xnew[!is.na(Xnew)]
-      par(mfrow = mfrow, mar = c(5, 4, 4, 2) + 0.1, ask = TRUE)
       options(warn = -1)
+      pdC <- list()
       for (i in 1:ncol(mat)) {
-        plot(Xnew, matN[, i], type = "l", main = nms[i], 
-             ylim = ylim, xlab = xlabel, ylab = "Proportion")
+
+        lp_dat <- data.frame(x = Xnew, y = matN[,i])
+        lp <- ggplot(aes_string("x", "y"), data = lp_dat) + geom_line() + ylim(ylimit) +
+          xlab(xlabel) + ylab("Proportion") + ggtitle(nms[i]) 
         if (se.fit) {
           xx <- c(Xnew, rev(Xnew))
           yy <- c(matL[, i], rev(matU[, i]))
-          polygon(xx, yy, col = "light grey", border = NA)
-          lines(Xnew, matN[, i])
+          poly_dat <- data.frame(xx = xx, yy = yy)
+          lp <- lp + geom_polygon(aes_string("xx", "yy"), col = "light grey", 
+                                     alpha = 0.5, data = poly_dat) 
+         
         }
-        rug(X[dat$Group == levels(dat$Group)[i]])
+        rug_dat <- data.frame(x = X[dat$Group == levels(dat$Group)[i]])
+        pdC[[i]] <- lp + geom_rug(aes_string(x = "x", y = NULL), data = rug_dat )
+      
       }
+
+      m_p <- marrangeGrob(grobs = pdC, nrow = 3, ncol = 3, top = "Partial Dependence Plot")
     }
     options(warn = 0)
-    par(mfrow = c(1, 1), ask = FALSE, mar = c(5, 4, 4, 2) + 
-          0.1)
   }
   if (plot2file) 
     dev.off()
   
-  par(def.par)
-  
+
   invisible(m_p)
 }

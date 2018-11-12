@@ -153,7 +153,6 @@ plot.diet <- function(x, y = NULL, Xvar, LonID, LatID, mapxlim, mapylim, PredSpI
     }
   }
     
-     
   
  
   # Summary plots for Xvar
@@ -278,10 +277,10 @@ plot.diet <- function(x, y = NULL, Xvar, LonID, LatID, mapxlim, mapylim, PredSpI
                        nprey = length(levels(x$Group)))
 
 
-  list(SmGAMOutput = lapply(res,summary.gam), dataS1 = sum.x, dataS2 = sum.x2,
+  invisible(list(SmGAMOutput = lapply(res,summary.gam), dataS1 = sum.x, dataS2 = sum.x2,
        expl1 = expl1, expl2 = expl2, expl3 = expl3, expl4= expl4, expl5 = expl5,
        expl6 = expl6, expl7 = expl7, expl8 = expl8, expl9 = expl9, expl10 = expl10,
-       plotSpComp = plotSpComp, smplot = smplot)
+       plotSpComp = plotSpComp, smplot = smplot))
   
   
  

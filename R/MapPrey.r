@@ -12,6 +12,7 @@
 #' @importFrom "ggplot2" "ggplot" "ggplot_gtable" "aes_string" "geom_point" "geom_bar"
 #' @importFrom "ggplot2" "geom_histogram"
 
+
 MapPrey <- function(x, LonID, LatID, mapxlim, mapylim, database){
   
   unpreyID <- levels(x$Group)
@@ -21,6 +22,7 @@ MapPrey <- function(x, LonID, LatID, mapxlim, mapylim, database){
      map1[[i]] <- mappoints(pdat[,c(LonID,LatID)], xlim = mapxlim, ylim = mapylim,  
                          database = database, gtitle = unpreyID[i])
   }
+
   expl4 <- do.call(grid.arrange, map1)
   expl4
 }

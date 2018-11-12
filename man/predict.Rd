@@ -8,8 +8,8 @@
 predict(object, ...)
 
 \method{predict}{dpart}(object, newdata = list(), type = c("prob",
-  "class"), na.action, node.cols = NULL, plot = TRUE,
-  pred.type = "obs", predatorID = NULL, cex = 1, ...)
+  "class"), node.cols = NULL, plot = TRUE, pred.type = "obs",
+  predatorID = NULL, cex = 1, ...)
 }
 \arguments{
 \item{object}{object of class \code{dpart}}
@@ -20,8 +20,6 @@ predict(object, ...)
 
 \item{type}{either "prob" or "class" to specify probabilities or 
 classifications.}
-
-\item{na.action}{what to do about missing values. (Default is to omit).}
 
 \item{node.cols}{node.cols}
 
@@ -79,7 +77,7 @@ probabilities or predicted classificaitons.
 # predict classification  for each observation in the dataset
 #yft.predC <- predict(yft.pr, type = "class")   # predicted 
 #classification
-                          
+         
 }
 \references{
 Kuhnert, P.M., Duffy, L. M and Olson, R.J. (2012) The 
