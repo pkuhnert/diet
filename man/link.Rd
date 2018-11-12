@@ -5,11 +5,11 @@
 \alias{link.bag}
 \title{Links Bagged Predictions to Tree}
 \usage{
-link(x, object, LatID, LonID, plot = TRUE, oob = FALSE, mfrow = c(2,
-  2), orderN = FALSE)
+link(x, object, LatID, LonID, plot = TRUE, oob = FALSE,
+  orderN = FALSE)
 
 \method{link}{bag}(x, object, LatID, LonID, plot = TRUE, oob = FALSE,
-  mfrow = c(2, 2), orderN = FALSE)
+  orderN = FALSE)
 }
 \arguments{
 \item{x}{object of class \code{bag}.}
@@ -24,9 +24,6 @@ link(x, object, LatID, LonID, plot = TRUE, oob = FALSE, mfrow = c(2,
 
 \item{oob}{logical. Should out of bag (oob) predictions be used to map back to the terminal nodes
 of the tree.}
-
-\item{mfrow}{a vector of the form \code{c(nr,nc)} where \code{nr} equals the number of rows and
-\code{nc} equals the number of columns for plotting. (defaults to c(2,2))}
 
 \item{orderN}{logical. Should the node outputs be ordered.}
 }
@@ -68,8 +65,7 @@ plot(yft.pr, node.cols = node.colsY)
                      
 # Link the predictions back to terminal nodes of a tree and plot 
 #ex.bag.l <- link(x = yft.bag, object = yft.pr, LatID = "Lat", LonID = "Lon",
-#                   mapxlim = c(-125, -75), mapylim = c(0, 30), plot = TRUE, oob = TRUE, 
-#                   mfrow = c(2,2))
+#                   mapxlim = c(-125, -75), mapylim = c(0, 30), plot = TRUE, oob = TRUE)
             
  
 }

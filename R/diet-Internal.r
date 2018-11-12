@@ -143,8 +143,7 @@ SpeciesCompBar <- function(x, prey.cols, Factor, Species){
   
   bcDist <- barchart(prey.tab ~ names(prey.tab),  scales = list(x = list(rot = 45)), 
                      main = paste("Distribution of ", Species), col = "skyblue", ylab = "Proportion")
-  #plot(val)
-  
+ 
   # Composition
   unF <- levels(x[,Factor])
   x.tab <- list()
@@ -202,33 +201,61 @@ SpeciesCompBar <- function(x, prey.cols, Factor, Species){
     
   }
   
+#  x.tab <- list()
+#  for(j in 1:length(unF)){
+#    x.tab[[j]] <- data.frame(matrix(0, nrow = length(unyr), ncol = length(levels(x$Group))))
+#    names(x.tab[[j]]) <- levels(dat$Group)
+#    row.names(x.tab[[j]]) <- paste(unyr)
+    
+#  }
+  
+  x.tab <- list()
+  bc.grp <- list()
+  
   for(i in 1:length(unyr)){
     dat <- x[x$Year == unyr[i] & !is.na(x$Year),]
-    
     unF <- levels(dat[,Factor])
-    x.tab <- list()
     for(j in 1:length(unF)){
       datF <- dat[dat[,Factor] == unF[j],]
       x.tab[[j]] <- tapply(datF$W, datF$Group, sum)
       x.tab[[j]][is.na(x.tab[[j]])] <- 0
     }
+  
+  
+  
+#  for(i in 1:length(unyr)){
+#    dat <- x[x$Year == unyr[i] & !is.na(x$Year),]
+    
+#    unF <- levels(dat[,Factor])
+#    x.tab <- list()
+#    for(j in 1:length(unF)){
+#      datF <- dat[dat[,Factor] == unF[j],]
+#      x.tab[[j]] <- tapply(datF$W, datF$Group, sum)
+#      x.tab[[j]][is.na(x.tab[[j]])] <- 0
+#    }
     names(x.tab) <- unF
+
+    
+ #   n <- unlist(lapply(x.tab, length))
     
     
-    n <- unlist(lapply(x.tab, length))
+#    x.tab.df <- data.frame(cbind(unlist(x.tab), rep(as.vector(levels(dat$Group)), length(levels(dat[,Factor]))), 
+#                                 rep(names(n), n)))
     
     
-    x.tab.df <- data.frame(cbind(unlist(x.tab), rep(as.vector(levels(dat$Group)), length(levels(dat[,Factor]))), 
-                                 rep(names(n), n)))
-    
-    names(x.tab.df) <- c("y", "Factor", "Group")
-    row.names(x.tab.df) <- NULL
+
+    x.tab.df <- melt(x.tab)
+    names(x.tab.df) <- c("Factor", "y", "Group")
+
+#    names(x.tab.df) <- c("y", "Factor", "Group")
+ #   row.names(x.tab.df) <- NULL
     x.tab.df$y <- as.numeric(as.vector(x.tab.df$y))
     
     tab <- tapply(x.tab.df$y, x.tab.df$Group, function(x) x/sum(x))
     x.bp <- data.frame(cbind(unlist(tab), rep(names(tab), lapply(tab, length)),
                              rep(levels(dat$Group), length(tab))))
     names(x.bp) <- c("y", "Factor", "Group")
+    #x.bp$Year <- rep(unyr, length(levels(dat$Group)))
     x.bp$y <- as.numeric(as.vector(x.bp$y))
     x.bp$y[is.nan(x.bp$y)] <- 0
     if(!is.null(prey.cols))
@@ -241,12 +268,12 @@ SpeciesCompBar <- function(x, prey.cols, Factor, Species){
       trellis.par.set("superpose.polygon", trel.def)
     }
     
-    bc.grp <- barchart(y ~ Factor, groups = x.bp$Group,  data = x.bp, stack = TRUE, 
+    bc.grp[[i]] <- barchart(y ~ Factor, groups = x.bp$Group,  data = x.bp, stack = TRUE, 
                        scales = list(x = list(rot = 45)),
                        auto.key = list(space = "right"), ylim = c(0,1), 
                        main = paste("Composition of", Species, ": ", unyr[i]), ylab = "Proportion")
-    
-  }
+  } 
+
   
   list(bcDist = bcDist, bc = bc, bc.yr = bc.yr, bc.grp = bc.grp)
   

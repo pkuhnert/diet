@@ -8,7 +8,7 @@
 predict(object, ...)
 
 \method{predict}{dpart}(object, newdata = list(), type = c("prob",
-  "class"), na.action = na.pass, node.cols = NULL, plot = TRUE,
+  "class"), na.action, node.cols = NULL, plot = TRUE,
   pred.type = "obs", predatorID = NULL, cex = 1, ...)
 }
 \arguments{

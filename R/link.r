@@ -9,8 +9,6 @@
 #' @param plot logical. Should a plot be produced.
 #' @param oob logical. Should out of bag (oob) predictions be used to map back to the terminal nodes
 #' of the tree.
-#' @param mfrow a vector of the form \code{c(nr,nc)} where \code{nr} equals the number of rows and
-#' \code{nc} equals the number of columns for plotting. (defaults to c(2,2))
 #' @param orderN  logical. Should the node outputs be ordered.
 #' 
 #' 
@@ -57,21 +55,20 @@
 #'                      
 #' # Link the predictions back to terminal nodes of a tree and plot 
 #' #ex.bag.l <- link(x = yft.bag, object = yft.pr, LatID = "Lat", LonID = "Lon",
-#' #                   mapxlim = c(-125, -75), mapylim = c(0, 30), plot = TRUE, oob = TRUE, 
-#' #                   mfrow = c(2,2))
+#' #                   mapxlim = c(-125, -75), mapylim = c(0, 30), plot = TRUE, oob = TRUE)
 #'             
 #'  
 #' @export                  
-link <- function(x, object, LatID, LonID, plot = TRUE, oob = FALSE, mfrow = c(2,2), orderN = FALSE) 
+link <- function(x, object, LatID, LonID, plot = TRUE, oob = FALSE, orderN = FALSE) 
   UseMethod("link")
 
 #' @rdname link
-#' @import "reshape2"
+#' @importFrom "reshape2" "melt"
 #' @import "abind"  
 #' @importFrom "gridExtra" "marrangeGrob"
 #' @export
 link.bag <- function(x, object, LatID, LonID, 
-                     plot = TRUE,  oob = FALSE, mfrow = c(2,2), orderN = FALSE){
+                     plot = TRUE,  oob = FALSE, orderN = FALSE){
   
   # links the predictions to the terminal nodes of a tree model
   options(warn = -1)

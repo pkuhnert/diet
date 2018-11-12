@@ -72,7 +72,7 @@ predict <- function(object, ...){
 #' @rdname predict
 #' @export
 predict.dpart <- function(object, newdata = list(), type = c("prob", "class"), 
-                          na.action = na.pass, node.cols = NULL,
+                          na.action, node.cols = NULL,
            plot = TRUE, pred.type = "obs", predatorID = NULL, cex = 1.0, ...){
     
     if(plot)
@@ -94,7 +94,7 @@ predict.dpart <- function(object, newdata = list(), type = c("prob", "class"),
       if (is.null(attr(newdata, "terms"))) {
         Terms <- delete.response(object$terms)
         ID <- newdata[,predatorID]
-        newdata <- model.frame(Terms, newdata, na.action = na.action, 
+        newdata <- model.frame(Terms, newdata, na.action = tree::na.pass, 
                                xlev = attr(object, "xlevels"))
         if (!is.null(cl <- attr(Terms, "dataClasses"))) 
           .checkMFClasses(cl, newdata, TRUE)

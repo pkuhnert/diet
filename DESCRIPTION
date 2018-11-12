@@ -24,7 +24,6 @@ Imports:
     mgcv,
     raster,
     rasterVis,
-    reshape,
     reshape2,
     rpart,
     rpart.plot,

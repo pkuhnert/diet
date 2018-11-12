@@ -5,13 +5,15 @@
 \alias{partdep.bag}
 \title{Partial Dependence Plots}
 \usage{
-\method{partdep}{bag}(object, Xvar, Yvar = NULL, fact = FALSE, var.cond = NULL,
-  plotmap = FALSE, mfrow=NULL, xlim = NULL, ylim = NULL, leg.pos = "topleft", plot2file = FALSE, se.fit = FALSE)
+partdep(object, Xvar, Yvar = NULL, fact = FALSE, var.cond = NULL,
+  plotmap = FALSE, mfrow = NULL, xlim = NULL, ylim = NULL,
+  leg.pos = "topleft", plot2file = FALSE, se.fit = FALSE,
+  too.far = 0.1, sp.id = NULL)
 
 \method{partdep}{bag}(object, Xvar, Yvar = NULL, fact = FALSE,
   var.cond = NULL, plotmap = FALSE, mfrow = NULL, xlim = NULL,
   ylim = NULL, leg.pos = "topleft", plot2file = FALSE,
-  se.fit = FALSE, too.far = 0.1, sp.id = NULL)
+  se.fit = FALSE, too.far = 0.1, sp.id = NULL, palette)
 }
 \arguments{
 \item{object}{object of class \code{bag}}
@@ -46,6 +48,12 @@ in the current working directory.}
 
 \item{se.fit}{logical. Should standard errors be produced and plotted on the figures of the 1D plots?
 (default: FALSE)}
+
+\item{too.far}{How far to clip the map (Default = 0.1)}
+
+\item{sp.id}{Species ID (Default = NULL)}
+
+\item{palette}{colour palette (created using the apc function)}
 }
 \value{
 1D and 2D plots of partial dependence.

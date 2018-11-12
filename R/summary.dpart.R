@@ -50,7 +50,7 @@ summary.rpart(object, cp = cp, digits = digits, file = file, ...)
 
 
 #' @rdname summary
-#' @import "stats"
+#' @importFrom "stats" "naprint" 
 summary.rpart <- function(object, cp=0, digits=getOption("digits"), file,  ...)
   {
     if(!inherits(object, "rpart")) stop("Not legitimate rpart object")

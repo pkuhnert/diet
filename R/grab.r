@@ -19,7 +19,6 @@
 #' range of the data are used.
 #' @param mapylim optional map y-limits. If none are specified then the 
 #' range of the data are used.
-#' @param mapcol map land colour. (default: gold3)
 #' @param database either 'world' or 'world2' are available for plotting. 
 #' Defaults to 'world' if
 #' not specified.
@@ -75,13 +74,11 @@
 #' \dontrun{
 #'   # Exploring nodes of the tree - single page
 #'   val <- grab(object = yft.pr, LatID = "Lat", LonID = "Lon", setID = "TripSetNo", 
-#'               node.cols = node.colsY, cex = 1, mapxlim = c(-125, -75), mapylim = c(0, 30),
-#'                           mapcol = "gold3", pos = "topleft")
+#'               node.cols = node.colsY, cex = 1, mapxlim = c(-125, -75), mapylim = c(0, 30))
 #'                           
 #'  # Exploring nodes of the tree - multiple pages
 #'  val <- grab(object = yft.pr, LatID = "Lat", LonID = "Lon", setID = "TripSetNo", 
-#'              node.cols = node.colsY, cex = 1, mapxlim = c(-125, -75), mapylim = c(0, 30),
-#'                          mapcol = "gold3", pos = "topleft", onepage = FALSE)
+#'              node.cols = node.colsY, cex = 1, mapxlim = c(-125, -75), mapylim = c(0, 30))
 #'                          
 #'  # Exploring multiple nodes
 #'  grabmulti(object = yft.pr, LatID = "Lat", LonID = "Lon", setID = "TripSetNo", 
@@ -89,8 +86,8 @@
 #' }
 #' @export
 grab <- function(object, LatID, LonID, setID = NULL, node.cols = NULL, cex = 0.8, 
-                 mapxlim = NULL, mapylim = NULL, mapcol = "gold3", database = 'world', 
-                 onepage = TRUE, display.object, oob = FALSE, ylim) UseMethod("grab")
+                 mapxlim = NULL, mapylim = NULL, database = 'world') UseMethod("grab")
+
 
 
 #' @rdname grab
@@ -98,7 +95,7 @@ grab <- function(object, LatID, LonID, setID = NULL, node.cols = NULL, cex = 0.8
 #' @export
 grabmulti.dpart <- function(object, LatID, LonID, setID = NULL, node.cols = NULL, cex = 0.8,
                             mapxlim = NULL, mapylim = NULL, 
-                            mapcol = "black", n = nrow(object$frame), database = 'world', ...){
+                            n = nrow(object$frame), database = 'world'){
   
   if (!inherits(object, "dpart"))
     stop("Not a dpart object")
@@ -125,8 +122,7 @@ grabmulti.dpart <- function(object, LatID, LonID, setID = NULL, node.cols = NULL
     i <- count + 1
     
     val[[i]] <- grab.dpart(object, LatID = LatID, LonID = LonID, setID = setID, node.cols = node.cols, cex = cex,
-                           mapxlim = mapxlim, mapylim = mapylim, mapcol = mapcol, database = database, 
-                           onepage = TRUE, ...)
+                           mapxlim = mapxlim, mapylim = mapylim, database = database)
     nodeS <- rbind(nodeS, val[[i]]$nodeS)
     count <- count + 1
   }
@@ -143,13 +139,13 @@ grabmulti.dpart <- function(object, LatID, LonID, setID = NULL, node.cols = NULL
 #' @rdname grab
 #' @export
 grabmulti <-function(object, LatID, LonID, setID = NULL, node.cols = NULL, cex = 0.8,
-                     mapxlim = NULL, mapylim = NULL, mapcol = "gold3", n = nrow(object$frame), 
-                     database = 'world', ...) UseMethod("grabmulti")
+                     mapxlim = NULL, mapylim = NULL,  n = nrow(object$frame), 
+                     database = 'world') UseMethod("grabmulti")
 
 #' @rdname grab
 #' @export
 grab.dpart <- function(object, LatID, LonID, setID = NULL, node.cols = NULL, cex = 0.8, 
-                       mapxlim = NULL, mapylim = NULL, mapcol = "black", database = 'world'){  
+                       mapxlim = NULL, mapylim = NULL, database = 'world'){  
   
   
   if (!inherits(object, "dpart"))
@@ -241,7 +237,7 @@ grab.dpart <- function(object, LatID, LonID, setID = NULL, node.cols = NULL, cex
 #' @rdname grab
 #' @export
 grab.bag <- function(object, LatID, LonID, setID =  NULL, node.cols = NULL, cex = 0.8,
-                     mapxlim = NULL, mapylim = NULL, mapcol = "gold3", database = 'world',  
+                     mapxlim = NULL, mapylim = NULL, database = 'world',  
                      display.object, oob = FALSE, ylim){
   
   
@@ -301,12 +297,12 @@ grab.bag <- function(object, LatID, LonID, setID =  NULL, node.cols = NULL, cex 
   subpred.where <- subtree$where
   bp <- explore(object = subtree, pred = subpred, pred.where = subpred.where, loss,
           node = pred.where, cols = node.cols, showtitle = FALSE, labels = FALSE, cex = cex, ylim = ylim)
-  
+
   
   # bootstrap estimates
   if(missing(ylim))
     ylim <- c(-0.05,1.05)
-  bag.map <- link(object, subtree, LatID, LonID,  mapxlim, mapylim, oob = oob, plot = FALSE)
+  bag.map <- link(object, subtree, LatID, LonID,  oob = oob, plot = FALSE)
   options(warn = -1)
   
   nodestats <- explore.bag(bag.map, nID, cols = node.cols,

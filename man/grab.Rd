@@ -9,26 +9,23 @@
 \title{Summarises a Node of the Tree}
 \usage{
 grab(object, LatID, LonID, setID = NULL, node.cols = NULL, cex = 0.8,
-  mapxlim = NULL, mapylim = NULL, mapcol = "gold3",
-  database = "world", onepage = TRUE, display.object, oob = FALSE,
-  ylim)
+  mapxlim = NULL, mapylim = NULL, database = "world")
 
 \method{grabmulti}{dpart}(object, LatID, LonID, setID = NULL,
   node.cols = NULL, cex = 0.8, mapxlim = NULL, mapylim = NULL,
-  mapcol = "black", n = nrow(object$frame), database = "world", ...)
+  n = nrow(object$frame), database = "world")
 
 grabmulti(object, LatID, LonID, setID = NULL, node.cols = NULL,
-  cex = 0.8, mapxlim = NULL, mapylim = NULL, mapcol = "gold3",
-  n = nrow(object$frame), database = "world", ...)
+  cex = 0.8, mapxlim = NULL, mapylim = NULL,
+  n = nrow(object$frame), database = "world")
 
 \method{grab}{dpart}(object, LatID, LonID, setID = NULL,
   node.cols = NULL, cex = 0.8, mapxlim = NULL, mapylim = NULL,
-  mapcol = "black", database = "world")
+  database = "world")
 
 \method{grab}{bag}(object, LatID, LonID, setID = NULL,
   node.cols = NULL, cex = 0.8, mapxlim = NULL, mapylim = NULL,
-  mapcol = "gold3", database = "world", display.object, oob = FALSE,
-  ylim)
+  database = "world", display.object, oob = FALSE, ylim)
 }
 \arguments{
 \item{object}{tree object either of class \code{dpart} or \code{bag}}
@@ -51,11 +48,12 @@ range of the data are used.}
 \item{mapylim}{optional map y-limits. If none are specified then the 
 range of the data are used.}
 
-\item{mapcol}{map land colour. (default: gold3)}
-
 \item{database}{either 'world' or 'world2' are available for plotting. 
 Defaults to 'world' if
 not specified.}
+
+\item{n}{numeric. Maximum number of nodes to investigate in the tree. 
+Defaults to the number in the tree.}
 
 \item{display.object}{tree object to display. This may be different 
 to \code{object} when bagging is used.}
@@ -66,9 +64,6 @@ use out of bag estimates.}
 
 \item{ylim}{y-axis limit for barcharts that are produced by the 
 \code{explore} function}
-
-\item{n}{numeric. Maximum number of nodes to investigate in the tree. 
-Defaults to the number in the tree.}
 }
 \value{
 Summary output from the node/s selected in the tree 
@@ -115,13 +110,11 @@ yft.pr <- prune(yft.dp, se = 1)
 \dontrun{
   # Exploring nodes of the tree - single page
   val <- grab(object = yft.pr, LatID = "Lat", LonID = "Lon", setID = "TripSetNo", 
-              node.cols = node.colsY, cex = 1, mapxlim = c(-125, -75), mapylim = c(0, 30),
-                          mapcol = "gold3", pos = "topleft")
+              node.cols = node.colsY, cex = 1, mapxlim = c(-125, -75), mapylim = c(0, 30))
                           
  # Exploring nodes of the tree - multiple pages
  val <- grab(object = yft.pr, LatID = "Lat", LonID = "Lon", setID = "TripSetNo", 
-             node.cols = node.colsY, cex = 1, mapxlim = c(-125, -75), mapylim = c(0, 30),
-                         mapcol = "gold3", pos = "topleft", onepage = FALSE)
+             node.cols = node.colsY, cex = 1, mapxlim = c(-125, -75), mapylim = c(0, 30))
                          
  # Exploring multiple nodes
  grabmulti(object = yft.pr, LatID = "Lat", LonID = "Lon", setID = "TripSetNo", 

@@ -3,8 +3,6 @@
 #' 
 #' @description Produce partial dependence plots for examing each variable's contribution to the predicted response.
 #' 
-#' @usage \method{partdep}{bag}(object, Xvar, Yvar = NULL, fact = FALSE, var.cond = NULL,
-#'   plotmap = FALSE, mfrow=NULL, xlim = NULL, ylim = NULL, leg.pos = "topleft", plot2file = FALSE, se.fit = FALSE)
 #'   
 #' @param object object of class \code{bag}
 #' @param Xvar name of variable/s to plot. This can be a single variable e.g. "Len" (1D plot) or
@@ -27,6 +25,9 @@
 #' in the current working directory.
 #' @param se.fit logical. Should standard errors be produced and plotted on the figures of the 1D plots?
 #' (default: FALSE)
+#' @param too.far How far to clip the map (Default = 0.1)
+#' @param sp.id Species ID (Default = NULL)
+#' @param palette colour palette (created using the apc function)
 #' 
 #' @details There are many different combinations of arguments for producing 1D and 2D plots.
 #' Illustrations of the combinations are shown in the examples section below.
@@ -88,12 +89,14 @@ partdep <- function(object, Xvar, Yvar = NULL, fact = FALSE, var.cond = NULL,
 #' @import "sp"
 #' @import "raster"
 #' @import "ggplot2"
-#' @import "reshape"
+#' @importFrom "reshape2" "melt"
+#' @importFrom "latticeExtra" "layer"
+#' @importFrom "stats" "delete.response"
 #' @export
 partdep.bag <- function (object, Xvar, Yvar = NULL, fact = FALSE, var.cond = NULL, 
           plotmap = FALSE, mfrow = NULL, xlim = NULL, ylim = NULL, 
           leg.pos = "topleft", plot2file = FALSE, se.fit = FALSE, too.far = 0.1,
-          sp.id = NULL) 
+          sp.id = NULL, palette) 
   
 {
   if (plot2file) 
@@ -339,7 +342,7 @@ partdep.bag <- function (object, Xvar, Yvar = NULL, fact = FALSE, var.cond = NUL
       mat.raster <- raster(mat)  # the raster is being created
       
       # Set up of plot
-      p <- levelplot(mat.raster, maxpixels=4e6, margin=FALSE, cuts=length(palette)-1, col.regions=pal,
+      p <- levelplot(mat.raster, maxpixels=4e6, margin=FALSE, cuts=length(palette)-1, col.regions=palette,
                      xlab = "", ylab = "", at = seq(0, 1, length = 50))
       
       # country layer
@@ -423,15 +426,16 @@ partdep.bag <- function (object, Xvar, Yvar = NULL, fact = FALSE, var.cond = NUL
         for (i in 1:ncol(mat)) {
        
           
-          tmp <- subset(mat_melt, variable == nms[i])
+        #  tmp <- subset(mat_melt, variable == nms[i])
+          tmp <- mat_melt[mat_melt$variable == nms[i],]
           
           
           pdF[[i]] <- ggplot(tmp) +
-            geom_segment(aes(x = category, y = lci, xend = category, yend = uci),
+            geom_segment(aes_string(x = "category", y = "lci", xend = "category", yend = "uci"),
                           lineend = "butt", arrow = arrow(angle = 90, 
                                                                    length=unit(0.1,"cm"), 
                                                                    ends = "both")) +
-            geom_point(aes(x = category, y = mean)) +
+            geom_point(aes_string(x = "category", y = "mean")) +
             xlab("") + ylab("Proportion") + theme_bw() + ggtitle(paste(nms[i])) +
             theme(plot.title = element_text(hjust = 0.5), 
                   axis.text.x = element_text(angle = 0, hjust = 1)) 
