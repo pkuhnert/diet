@@ -91,6 +91,7 @@ link.bag <- function(x, object, LatID, LonID,
   for(i in 1:nBaggs){
     if(oob){  
       where <- rpart:::pred.rpart(object, rpart.matrix(x$data[paste(x$oob[[i]]),]))
+     # where <- pred.rpart(object, rpart.matrix(x$data[paste(x$oob[[i]]),]))
       tmp <- apply(x$pred.oob[[i]], 2, function(x, wh) tapply(x, wh, mean), where)
       n.nms <- names(table(where))
       bpred[[i]][n.nms,] <- tmp
@@ -140,10 +141,12 @@ link.bag <- function(x, object, LatID, LonID,
     
     un_node <- unique(bpred$node)
     for(i in 1:length(un_node)){
-      tmp <- subset(bpred, node == un_node[i])
+      tmp <- bpred[bpred$node == un_node[i]]
+     # tmp <- subset(bpred, node == un_node[i])
       bp [[i]] <- ggplot(tmp) + 
-        geom_segment(aes(x = variable, y = lci, xend = variable, yend = uci),
-                     size = 1, lineend = "butt") + geom_point(aes(x = variable, y = mean), col = "white", size = 1, shape = "-") +
+        geom_segment(aes_string(x = "variable", y = "lci", xend = "variable", yend = "uci"),
+                     size = 1, lineend = "butt") + 
+        geom_point(aes_string(x = "variable", y = "mean"), col = "white", size = 1, shape = "-") +
                      xlab("") + ylab("Proportion") + theme_bw() + ggtitle(paste("Node ", un_node[i])) +
         theme(plot.title = element_text(hjust = 0.5), axis.text.x = element_text(angle = 45, hjust = 1)) 
     }

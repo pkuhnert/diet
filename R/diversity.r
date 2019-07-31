@@ -93,7 +93,7 @@ diversity.dpart <- function(object, newdata = NULL, too.far = 0.1, LatID, LonID,
   d.cols <- as.factor(d.bks)
   levels(d.cols) <- topo.colors(10)
   pdat <- NULL
-  #pred <- pred.rpart(object, rpart.matrix(newdata))
+ # pred <- pred.rpart(object, rpart.matrix(newdata))
   pred <- rpart:::pred.rpart(object, rpart.matrix(newdata))
   dd <- with(ff, dev/npredators)[pred]
   pdat <- data.frame(Lat = newdata[,LatID], Lon = newdata[,LonID], D = dd)

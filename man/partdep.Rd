@@ -6,8 +6,8 @@
 \title{Partial Dependence Plots}
 \usage{
 partdep(object, Xvar, Yvar = NULL, fact = FALSE, var.cond = NULL,
-  plotmap = FALSE, ylimit = NULL, leg.pos = "topleft",
-  plot2file = FALSE, se.fit = FALSE, too.far = 0.1, sp.id = NULL)
+  plotmap = FALSE, ylimit = NULL, plot2file = FALSE,
+  se.fit = FALSE, too.far = 0.1, sp.id = NULL, palette)
 
 \method{partdep}{bag}(object, Xvar, Yvar = NULL, fact = FALSE,
   var.cond = NULL, plotmap = FALSE, ylimit = NULL,
@@ -33,8 +33,6 @@ plotted as a 2D plot. (default = FALSE)}
 
 \item{ylimit}{range of values the y-axis takes when plotting. Defaults to the range of the y-data.
 See \code{\link{par}} for more details.}
-
-\item{leg.pos}{position for the prey names in the 2D plots. Defaults to "topleft".}
 
 \item{plot2file}{logical. Should the plots be written to file. If so, the file name defaults to "partdep.pdf"
 in the current working directory.}
@@ -72,7 +70,8 @@ Illustrations of the combinations are shown in the examples section below.
 
 # Bagging
 # Bagging with NO spatial bootstrapping
-#yft.bag <- bagging(Group ~ Lat + Lon + Year + Quarter + SST  + Length, data = dietPP, weights = W, minsplit = 50,
+# yft.bag <- bagging(Group ~ Lat + Lon + Year + Quarter + SST  + Length, 
+#            data = dietPP, weights = W, minsplit = 50,
 #             cp = 0.001, nBaggs = 500, predID = "TripSetPredNo")
             
 # 1D plots based on covariates in tree model
@@ -85,7 +84,8 @@ Illustrations of the combinations are shown in the examples section below.
 # 2D plots of Longitude and Latitude
 #partdep(object = yft.bag, Xvar = c("Lon", "Lat"), plotmap = TRUE)
 # 2D plots of Longitude and Latitude conditioning on Year
-#partdep(object = yft.bag, Xvar = c("Lon", "Lat"), plotmap = TRUE, leg.pos="topleft", too.far = 0.05, sp.id = "F.Ost")
+#partdep(object = yft.bag, Xvar = c("Lon", "Lat"), plotmap = TRUE, 
+#               leg.pos="topleft", too.far = 0.05, sp.id = "F.Ost")
 #partdep(object = yft.bag, Xvar = c("Lon", "Lat"), var.cond = list(Year = 2004),
 #     too.far = 0.05, plotmap = TRUE, sp.id = "F.Ost")
 

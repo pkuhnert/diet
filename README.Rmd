@@ -40,7 +40,8 @@ Leanne Duffy, IATTC USA, Email: lduffy@iattc.org
 
 ## About the Package
 
-This package blah blah
+This package performs an analysis of diet data using the methods outlined in
+Kuhnert et al. (2012)
 
 
 
@@ -61,6 +62,6 @@ The package diet version 1.0.0 is free and open source software, licensed under 
 
 ## References
 
-Kuhnert et al.    
+Kuhnert, P.M., Duffy, L., Young, J., Olson, R. (2012) Predicting fish diet composition using a bagged classification tree approach: A case study using yellowfin tuna (Thunnus albacares), Marine Biology, 159, 87-100.
 
 

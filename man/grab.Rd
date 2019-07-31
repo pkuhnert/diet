@@ -2,14 +2,24 @@
 % Please edit documentation in R/grab.r
 \name{grab}
 \alias{grab}
-\alias{grabmulti.dpart}
-\alias{grabmulti}
 \alias{grab.dpart}
 \alias{grab.bag}
+\alias{grabmulti.dpart}
+\alias{grabmulti}
 \title{Summarises a Node of the Tree}
 \usage{
 grab(object, LatID, LonID, setID = NULL, node.cols = NULL, cex = 0.8,
-  mapxlim = NULL, mapylim = NULL, database = "world")
+  mapxlim = NULL, mapylim = NULL, database = "world",
+  display.object = NULL, oob = FALSE, n = NULL, ylimit)
+
+\method{grab}{dpart}(object, LatID, LonID, setID = NULL,
+  node.cols = NULL, cex = 0.8, mapxlim = NULL, mapylim = NULL,
+  database = "world", display.object = NULL, oob = FALSE, n = NULL,
+  ylimit = NULL)
+
+\method{grab}{bag}(object, LatID, LonID, setID = NULL,
+  node.cols = NULL, cex = 0.8, mapxlim = NULL, mapylim = NULL,
+  database = "world", display.object, oob = FALSE, n = NULL, ylimit)
 
 \method{grabmulti}{dpart}(object, LatID, LonID, setID = NULL,
   node.cols = NULL, cex = 0.8, mapxlim = NULL, mapylim = NULL,
@@ -18,14 +28,6 @@ grab(object, LatID, LonID, setID = NULL, node.cols = NULL, cex = 0.8,
 grabmulti(object, LatID, LonID, setID = NULL, node.cols = NULL,
   cex = 0.8, mapxlim = NULL, mapylim = NULL,
   n = nrow(object$frame), database = "world")
-
-\method{grab}{dpart}(object, LatID, LonID, setID = NULL,
-  node.cols = NULL, cex = 0.8, mapxlim = NULL, mapylim = NULL,
-  database = "world")
-
-\method{grab}{bag}(object, LatID, LonID, setID = NULL,
-  node.cols = NULL, cex = 0.8, mapxlim = NULL, mapylim = NULL,
-  database = "world", display.object, oob = FALSE, ylim)
 }
 \arguments{
 \item{object}{tree object either of class \code{dpart} or \code{bag}}
@@ -52,9 +54,6 @@ range of the data are used.}
 Defaults to 'world' if
 not specified.}
 
-\item{n}{numeric. Maximum number of nodes to investigate in the tree. 
-Defaults to the number in the tree.}
-
 \item{display.object}{tree object to display. This may be different 
 to \code{object} when bagging is used.}
 
@@ -62,7 +61,10 @@ to \code{object} when bagging is used.}
 \code{grab.bag} function to 
 use out of bag estimates.}
 
-\item{ylim}{y-axis limit for barcharts that are produced by the 
+\item{n}{numeric. Maximum number of nodes to investigate in the tree. 
+Defaults to the number in the tree.}
+
+\item{ylimit}{y-axis limit for barcharts that are produced by the 
 \code{explore} function}
 }
 \value{

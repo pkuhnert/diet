@@ -26,7 +26,6 @@ SmPlots <- function(x, i, SmXvar, SmXdat, LonID, LatID, projection, palette, too
   tmpdat <- data.frame(SmXdat[,i], x[,LonID], x[,LatID])
   names(tmpdat) <- c("y", "Longitude", "Latitude")
   
-  #tmpdat <- data.frame(y = SmXdat[,i], Longitude = x[,LonID], Latitude = x[,LatID])
   res <- gam(y ~ s(Longitude, Latitude), data = tmpdat)
   
   # data(worldcountries)

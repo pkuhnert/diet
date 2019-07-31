@@ -63,7 +63,7 @@
 #' #yft.predC <- predict(yft.pr, type = "class")   # predicted 
 #' #classification
 #'          
-#' @importFrom "stats" "na.pass"                                         
+#' @importFrom "stats" "na.pass" ".checkMFClasses" "model.frame" "na.omit" "var"                                         
 #' @export
 predict <- function(object, ...){
       UseMethod("predict")
