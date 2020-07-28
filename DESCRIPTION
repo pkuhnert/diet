@@ -4,7 +4,7 @@ Version: 1.0
 Date: 2018-09-19
 Title: Performs an analysis of diet data using univariate trees
 Authors@R: c(person("Petra", "Kuhnert", email = "Petra.Kuhnert@data61.csiro.au", role = c("aut", "cre")),
-           person("Leanne", "Duffy", email = "lduffy@iattc.org", role = "aut"))
+           person("Leanne", "Fuller", email = "lfuller@iattc.org", role = "aut"))
 Maintainer: Petra Kuhnert <Petra.Kuhnert@data61.csiro.au>
 Depends: 
     R (>= 3.5.0)
@@ -33,6 +33,6 @@ Description: Performs an analysis of diet and isotope data using univariate tree
 License: GPL (>= 2)
 LazyLoad: TRUE
 LazyData: TRUE
-RoxygenNote: 6.1.0
+RoxygenNote: 6.1.1
 Suggests: knitr, rmarkdown
 VignetteBuilder: knitr

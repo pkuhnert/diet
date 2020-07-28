@@ -103,24 +103,20 @@ rpconvert <- function (x)
     ff$yval2 <- temp
     ff$yprob <- NULL
     x$frame <- ff
-    #temp <- rpart:::rpart.class(c(1, 1, 2, 2), NULL, wt = c(1, 1, 
-    #                                                        1, 1))
-    temp <- rpart.class(c(1, 1, 2, 2), NULL, wt = c(1, 1, 
+    temp <- rpart:::rpart.class(c(1, 1, 2, 2), NULL, wt = c(1, 1, 
                                                             1, 1))
     x$functions <- list(summary = temp$summary, print = temp$print, 
                         text = temp$text)
   }
   else if (x$method == "anova") {
     x$frame <- ff
-   # temp <- rpart:::rpart.anova(1:5, NULL, wt = rep(1, 5))
-    temp <- rpart.anova(1:5, NULL, wt = rep(1, 5))
+    temp <- rpart:::rpart.anova(1:5, NULL, wt = rep(1, 5))
     x$functions <- list(summary = temp$summary, text = temp$text)
   }
   else {
     ff$yval2 <- cbind(ff$yval, ff$yval2)
     x$frame <- ff
-   # temp <- rpart:::rpart.poisson(1:5, NULL, wt = rep(1, 5))
-    temp <- rpart.poisson(1:5, NULL, wt = rep(1, 5))
+    temp <- rpart:::rpart.poisson(1:5, NULL, wt = rep(1, 5))
     x$functions <- list(summary = temp$summary, text = temp$text)
   }
   class(x) <- "rpart"
@@ -1043,8 +1039,7 @@ text.dpart <-
     if(is.null(m$uniform))
       xy <- rpartco.dpart(x)
     else
-      xy <- rpartco(x)
-     # xy <- rpart:::rpartco(x)
+      xy <- rpart:::rpartco(x)
     node <- as.numeric(row.names(x$frame))
     is.left <- (node%%2 == 0)
     node.left <- node[is.left]
@@ -1441,9 +1436,7 @@ rpartco.dpart <- function (tree, parms = paste(".rpart.parms", dev.cur(), sep = 
 plotG.dpart <- function(x, node.cols = NULL, pos = NULL, ...){
   
   
-  #  plot(x, keep.margins = TRUE, ...)
-  #rpart:::plot.rpart(x, ...)
-  plot.rpart(x, ...)
+  rpart:::plot.rpart(x, ...)
   textG.dpart(x, xpd = NA, pretty = TRUE, splits = TRUE, node.cols = node.cols, 
               pos = pos,  ...)
   

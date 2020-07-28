@@ -82,6 +82,7 @@ link.bag <- function(x, object, LatID, LonID,
   
   bpred <- list()
   for(i in 1:nBaggs){
+    
     bpred[[i]] <- data.frame(matrix(0, nrow = length(names(table(object$where))),
                                     ncol = ncol(x$pred[[i]])))
     row.names(bpred[[i]]) <- names(table(object$where))
@@ -101,7 +102,7 @@ link.bag <- function(x, object, LatID, LonID,
       bpred[[i]] <- apply(x$pred[[i]], 2, function(x, wh) tapply(x, wh, mean), where)
     }
   }
-  
+
   bpred.sum <- do.call(abind, c(bpred, along = 3))
   bpred.m <- apply(bpred.sum, c(1,2), mean)
   bpred.v <- apply(bpred.sum, c(1,2), var)
@@ -138,11 +139,10 @@ link.bag <- function(x, object, LatID, LonID,
     bpred$node <- rep(row.names(bpred.m), ncol(bpred.m))
     
     bp <- list()
-    
+   
     un_node <- unique(bpred$node)
     for(i in 1:length(un_node)){
-      tmp <- bpred[bpred$node == un_node[i]]
-     # tmp <- subset(bpred, node == un_node[i])
+      tmp <- subset(bpred, node == un_node[i])
       bp [[i]] <- ggplot(tmp) + 
         geom_segment(aes_string(x = "variable", y = "lci", xend = "variable", yend = "uci"),
                      size = 1, lineend = "butt") + 

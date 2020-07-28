@@ -91,10 +91,12 @@ resids.dpart <- function(object, LonID, LatID, predID, plot = TRUE){
     semi_plot <- ggplot(v_df, aes_string("distance", "semivariance")) + 
       geom_point(size = 2) + xlim(0, max(v_df$distance)/2) +
       theme_bw() + ggtitle("Variogram of Residuals")
-    print(semi_plot)
+    
   }
+  else
+    semi_plot <- NULL
   
-  resids
+  list(resids = resids, semi_plot = semi_plot)
   
   
 }
@@ -128,12 +130,14 @@ resids.bag <- function(object, LonID, LatID, predID, plot = TRUE){
     semi_plot <- ggplot(v_df, aes_string("distance", "semivariance")) + 
       geom_point(size = 2) + xlim(0, max(v_df$distance)/2) +
       theme_bw() + ggtitle("Variogram of Residuals")
-    semi_plot
+    
 
     
   }
+  else
+    semi_plot <- NULL
   
-  resids
+  list(resids = resids, semi_plot = semi_plot)
   
   
 }
