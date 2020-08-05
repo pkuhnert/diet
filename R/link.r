@@ -86,12 +86,13 @@ link.bag <- function(x, object, LatID, LonID,
     bpred[[i]] <- data.frame(matrix(0, nrow = length(names(table(object$where))),
                                     ncol = ncol(x$pred[[i]])))
     row.names(bpred[[i]]) <- names(table(object$where))
-    names(bpred[[i]]) <- names(x$pred[[i]])
+    names(bpred[[i]]) <- names(data.frame(x$pred[[i]]))
   }
   options(warn = -1)
   for(i in 1:nBaggs){
-    if(oob){  
+    if(oob){ 
       where <- rpart:::pred.rpart(object, rpart.matrix(x$data[paste(x$oob[[i]]),]))
+
      # where <- pred.rpart(object, rpart.matrix(x$data[paste(x$oob[[i]]),]))
       tmp <- apply(x$pred.oob[[i]], 2, function(x, wh) tapply(x, wh, mean), where)
       n.nms <- names(table(where))
@@ -139,7 +140,7 @@ link.bag <- function(x, object, LatID, LonID,
     bpred$node <- rep(row.names(bpred.m), ncol(bpred.m))
     
     bp <- list()
-   
+  
     un_node <- unique(bpred$node)
     for(i in 1:length(un_node)){
       tmp <- subset(bpred, node == un_node[i])

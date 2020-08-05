@@ -160,18 +160,14 @@ bagging <- function(formula, data, weights, subset, na.action = na.dpart,
      cost <- rep(1, nvar)
    }
    if(missing(control))
-      control <- rpart.control(...)
+      control <- rpart:::rpart.control(...)
  
    options(warn = -1)
    
-   baggs <- oob <- pred.oob <- pred <- pp <- list()
  
   
    Omat <- formOmat(data, ID = predID)
-   resids <- data.frame(matrix(NA, nrow = nrow(Omat), ncol = nBaggs))
-   names(resids) <- paste("B", 1:nBaggs, sep = "")
-   row.names(resids) <- row.names(Omat)
-   
+  
   
    
  #  registerDoMC(numCores)     # only available on unix machines
@@ -182,7 +178,6 @@ bagging <- function(formula, data, weights, subset, na.action = na.dpart,
    result <- foreach(i = 1:nBaggs) %dopar%{
    if(i %% 50 == 0)
        cat("Iteration ", i, "\n")
-     
  
     
        if(spatial$fit)
@@ -193,28 +188,46 @@ bagging <- function(formula, data, weights, subset, na.action = na.dpart,
           bsamp <- bSample(data)
        sampid <- as.integer(row.names(bsamp))
        oob.m <- match(as.integer(row.names(data)), as.integer(row.names(bsamp)))
-       oob[[i]] <- as.integer(row.names(data))[is.na(oob.m)]
+       oob <- as.integer(row.names(data))[is.na(oob.m)]
        W.b <- W[sampid]
-       baggs[[i]] <- dpart(formula, bsamp, weights = W, na.action = na.action,
+       baggs <- dpart(formula, bsamp, weights = W, na.action = na.action,
               model = model, x = x, y = y, control = control,
               cost = cost, ...)
-       pred.oob[[i]] <- predict(baggs[[i]], newdata = data[paste(oob[[i]]),], 
+       pred.oob <- predict(baggs, newdata = data[paste(oob),], 
           type = "prob", plot = FALSE)
-       pred[[i]] <- predict(baggs[[i]], newdata = data, type = "prob", plot = FALSE)
+       pred <- predict(baggs, newdata = data, type = "prob", plot = FALSE)
      ###
 
-     pp[[i]] <- predict(baggs[[i]], newdata = data, type = "prob", pred.type = "predator",
+     pp <- predict(baggs, newdata = data, type = "prob", pred.type = "predator",
                              predatorID = predID, plot = FALSE)
-     d <- Distance(O = Omat[,(ncol(Omat)-ncol(pp[[i]])+1):ncol(Omat)], P = pp[[i]], type = "Hellinger")
-     resids[,i] <- d$Dist
-     
+     d <- Distance(O = Omat[,(ncol(Omat)-ncol(pp)+1):ncol(Omat)], P = pp, type = "Hellinger")
+     resids <- d$Dist
+  
+     list(baggs = baggs, oob = oob, pred.oob = pred.oob, pred = pred, predP = pp,
+          resid = resids)
      
    }
-   actualresult <- unlist(result)
-  
+
+   
+   baggs <- oob <- pred.oob <- pred <- pp <- list()
+   resids <- data.frame(matrix(NA, nrow = nrow(Omat), ncol = nBaggs))
+   names(resids) <- paste("B", 1:nBaggs, sep = "")
+   row.names(resids) <- row.names(Omat)
+
+   
+   for(i in 1:nBaggs){
+     baggs[[i]] <- result[[i]]$baggs
+     oob[[i]] <- result[[i]]$oob
+     pred.oob[[i]] <- result[[i]]$pred.oob
+     pred[[i]] <- result[[i]]$pred
+     pp[[i]] <- result[[i]]$predP
+     resids[i,] <- result[[i]]$resid
+   }
+
 
     Ebag <- list(baggs = baggs, oob = oob, pred.oob = pred.oob, pred = pred, predP = pp,
                 resid = resids,  data = data)
+  
     class(Ebag) <- c("bag")
     options(warn = 0)
     

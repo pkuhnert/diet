@@ -1596,8 +1596,8 @@ preyO <- 1:length(nodevals$prey)
 nodevals$preyO <- preyO
 
 
-p <- ggplot(nodevals, mapping = aes_string(x = reorder("prey", "preyO"), y = "lci95")) + 
-#p <- ggplot(nodevals, mapping = aes(x = reorder(prey, preyO), y = lci95)) + 
+#p <- ggplot(nodevals, mapping = aes_string(x = reorder("prey", "preyO"), y = "lci95")) + 
+p <- ggplot(nodevals, mapping = aes(x = reorder(prey, preyO), y = lci95)) + 
   geom_segment(stat = "identity", aes_string(xend = "prey", yend = "uci95", 
                                       colour = reorder(cols, preyO)), 
                lineend = "butt", size = 1.5, 
