@@ -208,7 +208,7 @@ bagging <- function(formula, data, weights, subset, na.action = na.dpart,
      
    }
 
-   
+
    baggs <- oob <- pred.oob <- pred <- pp <- list()
    resids <- data.frame(matrix(NA, nrow = nrow(Omat), ncol = nBaggs))
    names(resids) <- paste("B", 1:nBaggs, sep = "")
@@ -221,7 +221,7 @@ bagging <- function(formula, data, weights, subset, na.action = na.dpart,
      pred.oob[[i]] <- result[[i]]$pred.oob
      pred[[i]] <- result[[i]]$pred
      pp[[i]] <- result[[i]]$predP
-     resids[i,] <- result[[i]]$resid
+     resids[,i] <- result[[i]]$resid
    }
 
 
