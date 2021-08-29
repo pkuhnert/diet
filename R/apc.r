@@ -82,6 +82,9 @@ apc.diet <- function (x, preyfile, palette = NULL, check = FALSE)
     preynms <- preyfile
   
   
+  if(class(x$Group) == "character")
+    x$Group <- as.factor(x$Group)
+  
   
   # Sort the prey if there is a sort column labelled "Sort"
   if("Sort" %in% names(preynms))

@@ -68,6 +68,8 @@ for (i in 1:ncol(PreyData)) {
   if (is.factor(PreyData[, i])) 
     PreyData[, i] <- as.factor(as.vector(PreyData[, i]))
 }
+# Coerce Group column to factor
+PreyData$Group <- as.factor(PreyData$Group)
 
  PreyData
 

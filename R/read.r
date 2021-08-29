@@ -95,7 +95,7 @@ read.dm <- function (object = NULL, filenm = NULL, labels = list(DateL = "Date",
   if (is.null(object)) 
     dat <- read.csv(filenm)
   else dat <- object
-  
+
   
   if(!is.null(predsp)){ 
      unpred <- as.vector(unique(dat[,predsp]))
@@ -145,6 +145,8 @@ read.pp <- function (object = NULL, filenm = NULL,
   if (is.null(object)) 
     x <- read.csv(filenm)
   else x <- object
+  
+
   PredatorL <- labels$PredatorL
   TripSetL <- labels$TripSetL
   SpeciesL <- labels$SpeciesL
@@ -155,11 +157,12 @@ read.pp <- function (object = NULL, filenm = NULL,
   dat <- x[order(x[, PredatorL], x[, SpeciesL]), ]
   dat[, PreyGrpL] <- as.factor(as.vector(dat[, PreyGrpL]))
   d <- dat[, DateL]
-  d <- as.POSIXct(as.vector(d), format = Datef, tz = "GMT")
+  if(all(!(class(d) == "POSIXct" | class(d) == "POSIXt")))
+      d <- as.POSIXct(as.vector(d), format = Datef, tz = "GMT")
   dat[, "Date"] <- d
   f <- dat[, FullnessL]
   dat[, "Fullness"] <- f
-  
+
   Xmat <- data.frame(matrix(NA, nrow = length(unique(dat[, 
                                                          PredatorL])), ncol = length(Xvars) + 4))
   names(Xmat) <- c(PredatorL, TripSetL, DateL, FullnessL, Xvars)
