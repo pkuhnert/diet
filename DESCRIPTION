@@ -7,7 +7,7 @@ Authors@R: c(person("Petra", "Kuhnert", email = "Petra.Kuhnert@data61.csiro.au",
            person("Leanne", "Fuller", email = "lfuller@iattc.org", role = "aut"))
 Maintainer: Petra Kuhnert <Petra.Kuhnert@data61.csiro.au>
 Depends: 
-    R (>= 3.5.0)
+    R (>= 4.2.0)
 Imports:
     abind,
     foreach,
@@ -33,6 +33,6 @@ Description: Performs an analysis of diet and isotope data using univariate tree
 License: GPL (>= 2)
 LazyLoad: TRUE
 LazyData: TRUE
-RoxygenNote: 6.1.1
+RoxygenNote: 7.2.1
 Suggests: knitr, rmarkdown
 VignetteBuilder: knitr
