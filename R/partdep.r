@@ -498,7 +498,8 @@ partdep.bag <- function (object, Xvar, Yvar = NULL, fact = FALSE, var.cond = NUL
                                      alpha = 0.5, data = poly_dat) 
          
         }
-        rug_dat <- data.frame(x = X[dat$Group == levels(dat$Group)[i]])
+        dat_nona <- dat[!is.na(dat[,Xvar]),]  # omitting any NAs from Xvar as X has NAs removed from above
+        rug_dat <- data.frame(x = X[dat_nona$Group == levels(dat_nona$Group)[i]])
         pdC[[i]] <- lp + geom_rug(aes_string(x = "x", y = NULL), data = rug_dat )
       
       }

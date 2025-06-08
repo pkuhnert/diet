@@ -28,7 +28,6 @@ SmPlots <- function(x, i, SmXvar, SmXdat, LonID, LatID, projection, palette, too
   
   res <- gam(y ~ s(Longitude, Latitude), data = tmpdat)
   
-  # data(worldcountries)
   plotfit <- Vis.Gam(res, too.far = too.far, plot.type = "contour", add = FALSE)
   mat <- plotfit$mat
   names(mat) <- c("Longitude", "Latitude", "z")
@@ -46,6 +45,7 @@ SmPlots <- function(x, i, SmXvar, SmXdat, LonID, LatID, projection, palette, too
                  main = SmXvar[i])
 
   # country layer
+  
   country.layer <- layer(
     sp.polygons(worldcountries, fill="darkgray", col = "lightgray"),
     data=list(sp.polygons=sp.polygons, worldcountries=worldcountries) 

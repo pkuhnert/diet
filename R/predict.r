@@ -101,7 +101,6 @@ predict.dpart <- function(object, newdata = list(), type = c("prob", "class"),
       }
       else
         ID <- newdata[,paste(predatorID)]
-      #where <- pred.rpart(object, rpart.matrix(newdata))
       where <- rpart:::pred.rpart(object, rpart.matrix(newdata))
       
     }

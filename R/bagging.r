@@ -160,7 +160,7 @@ bagging <- function(formula, data, weights, subset, na.action = na.dpart,
      cost <- rep(1, nvar)
    }
    if(missing(control))
-      control <- rpart:::rpart.control(...)
+      control <- rpart.control(...)
  
    options(warn = -1)
    

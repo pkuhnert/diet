@@ -93,7 +93,6 @@ link.bag <- function(x, object, LatID, LonID,
     if(oob){ 
       where <- rpart:::pred.rpart(object, rpart.matrix(x$data[paste(x$oob[[i]]),]))
 
-     # where <- pred.rpart(object, rpart.matrix(x$data[paste(x$oob[[i]]),]))
       tmp <- apply(x$pred.oob[[i]], 2, function(x, wh) tapply(x, wh, mean), where)
       n.nms <- names(table(where))
       bpred[[i]][n.nms,] <- tmp

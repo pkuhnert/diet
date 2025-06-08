@@ -1,7 +1,7 @@
 Package: diet
 Type: Package
 Version: 1.0
-Date: 2018-09-19
+Date: 2023-09-25
 Title: Performs an analysis of diet data using univariate trees
 Authors@R: c(person("Petra", "Kuhnert", email = "Petra.Kuhnert@data61.csiro.au", role = c("aut", "cre")),
            person("Leanne", "Fuller", email = "lfuller@iattc.org", role = "aut"))
