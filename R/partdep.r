@@ -440,7 +440,7 @@ partdep.bag <- function (object, Xvar, Yvar = NULL, fact = FALSE, var.cond = NUL
         options(warn = 0)
       }
       else {
-        browser()
+ 
         for (i in 1:ncol(mat)) {
           val <- barplot(mat[, i], names.arg = "", main = nms[i], 
                          ylim = ylimit, ylab = "Proportion", axes = FALSE)
